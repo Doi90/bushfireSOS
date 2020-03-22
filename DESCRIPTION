@@ -1,13 +1,13 @@
 Package: bushfireSOS
-Title: What the Package Does (One Line, Title Case)
+Title: Fit Species Distribution Models In Response To Australian Bushfire Crisis
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "David",
+           family = "Wilkinson",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "davidpw@student.unimelb.edu.au",
+           comment = c(ORCID = "0000-0002-9560-6499"))
+Description: This package stores off of the functions required to fit species distribution models to Australian species in response to the 2019-2020 bushfire crisis.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
