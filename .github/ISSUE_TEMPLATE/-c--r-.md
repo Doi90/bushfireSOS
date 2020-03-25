@@ -15,6 +15,7 @@ Outline what function/set of functions are doing e.g. loading species data
 ## **Inputs**
 Define expected inputs of function/set of functions e.g. species as length one character vector
 
+Progress:
 - [ ] one neet
 - [ ] all neets
 - [ ] and the rest
@@ -22,6 +23,7 @@ Define expected inputs of function/set of functions e.g. species as length one c
 ## **Outputs**
 Define expected outputs of function/set of functoins e.g. data.frame with columns A:Z
 
+Progress:
 - [ ] one neet
 - [ ] all neets
 - [ ] and the rest
