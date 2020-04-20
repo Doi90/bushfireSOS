@@ -16,4 +16,7 @@ RoxygenNote: 7.0.2
 Imports: 
     dismo,
     caret,
-    ROCR
+    ROCR,
+    raster
+Suggests: 
+    testthat (>= 2.1.0)
