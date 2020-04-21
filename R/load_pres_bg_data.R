@@ -33,24 +33,30 @@ load_pres_bg_data <- function(species,
   }
 
   #clean name of bracket suffix - assuming the brackets denote subpopulation, and not taxonomic notations
-  species <- str_remove(species,"\\(.*\\)")
+  species <- stringr::str_remove(species,
+                        "\\(.*\\)")
 
   #remove trailing whitespace
-  species <- str_squish(species)
+  species <- stringr::str_squish(species)
 
   ########data getting#######
   #for ala, using ALA4R
-  occ_ala <- ALA4R::occurrences(taxon = paste0("text:\"",species,"\""), download_reason_id = 5, method="offline", email = email)
+  occ_ala <- ALA4R::occurrences(taxon = paste0("text:\"", species, "\""),
+                                download_reason_id = 5,
+                                method = "offline",
+                                email = email)
 
   #for the rest, use spocc
   #for now ignore guild specific datrabases, just get gbif
-  occ_spocc <- spocc::occ(query = species, from = "gbif", limit = 100000)
+  occ_spocc <- spocc::occ(query = species,
+                          from = "gbif",
+                          limit = 100000)
 
   #if neither search returned data, terminate function
-  if(nrow(occ_ala$data) == 0 & nrow(occ_spocc$gbif$data[[1]]) == 0){
-    return("Not run: no data found")
-  }
 
+  if(nrow(occ_ala$data) == 0 & nrow(occ_spocc$gbif$data[[1]]) == 0){
+    stop("Not run: no data found")
+  }
 
   # #define guild-based database parameter (for now ignore)
   # invert_databases <- c("gbif","inat","ecoengine","idigbio")
@@ -68,10 +74,14 @@ load_pres_bg_data <- function(species,
   # }
 
   ###merging ala and gbif###
+
   if(nrow(occ_ala$data) > 0 & nrow(occ_spocc$gbif$data[[1]]) > 0){
-    merged_df <- data.frame("ID" = seq(1:(nrow(occ_ala$data) + nrow(occ_spocc$gbif$data[[1]]))),
-                            "Origin" = c(rep("ALA",nrow(occ_ala$data)),rep("GBIF",nrow(occ_spocc$gbif$data[[1]]))),
-                            "Species" = c(rep(species,nrow(occ_ala$data)),rep(species,nrow(occ_spocc$gbif$data[[1]]))),#we are assuming the search returned all correct species - this needs looking at later on
+
+    merged_df <- data.frame("ID" = seq_len(nrow(occ_ala$data) + nrow(occ_spocc$gbif$data[[1]])),
+                            "Origin" = c(rep("ALA", nrow(occ_ala$data)),
+                                         rep("GBIF", nrow(occ_spocc$gbif$data[[1]]))),
+                            "Species" = c(rep(species, nrow(occ_ala$data)),
+                                          rep(species, nrow(occ_spocc$gbif$data[[1]]))),#we are assuming the search returned all correct species - this needs looking at later on
                             "Longitude" = c(occ_ala$data$longitude,#note ALA data may have GDA94 original long lat, but they are processed to be wgs84
                                             occ_spocc$gbif$data[[1]]$longitude),
                             "Latitude" = c(occ_ala$data$latitude,
@@ -96,13 +106,15 @@ load_pres_bg_data <- function(species,
                             "Collection" = c(occ_ala$data$collection,
                                              occ_spocc$gbif$data[[1]]$collectionCode),
                             "Coordinate.Uncertainty.in.Metres" = c(occ_ala$data$coordinateUncertaintyInMetres,
-                                                                   occ_spocc$gbif$data[[1]]$coordinateUncertaintyInMeters)
-    )
-  }else{#if one of the search is empty, then don't merge, but use the merged dataset structure for subsequent cleaning
+                                                                   occ_spocc$gbif$data[[1]]$coordinateUncertaintyInMeters))
+
+  } else { #if one of the search is empty, then don't merge, but use the merged dataset structure for subsequent cleaning
+
     if(nrow(occ_ala$data) > 0 & nrow(occ_spocc$gbif$data[[1]]) == 0){
-      merged_df <- data.frame("ID" = seq(1:nrow(occ_ala$data)),
-                              "Origin" = rep("ALA",nrow(occ_ala$data)),
-                              "Species" = rep(species,nrow(occ_ala$data)),#we are assuming the search returned all correct species - this needs looking at later on
+
+      merged_df <- data.frame("ID" = seq_along(occ_ala$data),
+                              "Origin" = rep("ALA", nrow(occ_ala$data)),
+                              "Species" = rep(species, nrow(occ_ala$data)),#we are assuming the search returned all correct species - this needs looking at later on
                               "Longitude" = occ_ala$data$longitude,
                               "Latitude" = occ_ala$data$latitude,
                               #add date for duplicate processing
@@ -114,12 +126,13 @@ load_pres_bg_data <- function(species,
                               "Dataset" = occ_ala$data$dataResourceName,
                               "Institute" = occ_ala$data$institution,
                               "Collection" = occ_ala$data$collection,
-                              "Coordinate.Uncertainty.in.Metres" = occ_ala$data$coordinateUncertaintyInMetres
-      )
-    }else{
-      merged_df <- data.frame("ID" = seq(1:nrow(occ_spocc$gbif$data[[1]])),
-                              "Origin" = rep("GBIF",nrow(occ_spocc$gbif$data[[1]])),
-                              "Species" = rep(species,nrow(occ_spocc$gbif$data[[1]])),#we are assuming the search returned all correct species - this needs looking at later on
+                              "Coordinate.Uncertainty.in.Metres" = occ_ala$data$coordinateUncertaintyInMetres)
+
+    } else {
+
+      merged_df <- data.frame("ID" = seq_along(occ_spocc$gbif$data[[1]]),
+                              "Origin" = rep("GBIF", nrow(occ_spocc$gbif$data[[1]])),
+                              "Species" = rep(species, nrow(occ_spocc$gbif$data[[1]])),#we are assuming the search returned all correct species - this needs looking at later on
                               "Longitude" = occ_spocc$gbif$data[[1]]$longitude,
                               "Latitude" = occ_spocc$gbif$data[[1]]$latitude,
                               #add date for duplicate processing
@@ -131,35 +144,41 @@ load_pres_bg_data <- function(species,
                               "Dataset" = occ_spocc$gbif$data[[1]]$datasetName,
                               "Institute" = occ_spocc$gbif$data[[1]]$institutionCode,
                               "Collection" = occ_spocc$gbif$data[[1]]$collectionCode,
-                              "Coordinate.Uncertainty.in.Metres" = occ_spocc$gbif$data[[1]]$coordinateUncertaintyInMeters
-      )
-    }
+                              "Coordinate.Uncertainty.in.Metres" = occ_spocc$gbif$data[[1]]$coordinateUncertaintyInMeters)
 
+    }
   }
 
-
   #remove spatial duplicates (other duplicate types may matter, think later)
+
   merged_df$Longitude <- as.numeric(merged_df$Longitude)
+
   merged_df$Latitude <- as.numeric(merged_df$Latitude)
-  merged_df <- merged_df[!duplicated(merged_df[,c("Longitude","Latitude")]),]
+
+  merged_df <- merged_df[!duplicated(merged_df[ , c("Longitude", "Latitude")]), ]
+
   #get rid of NA long and lats
+
   merged_df <- na.omit(merged_df)
+
   #get rid of unusable long lat vals (Roozbeh says can save some data here will look into it later)
+
   merged_df <- merged_df[merged_df$Longitude > -180 &
                            merged_df$Longitude < 180 &
                            merged_df$Latitude > -90 &
-                           merged_df$Latitude < 90,
-                         ]
+                           merged_df$Latitude < 90, ]
   #check if any record left
+
   if(nrow(merged_df) == 0){
-    return("Not run: no data with legitimate coordinates found")
+    stop("Not run: no data with legitimate coordinates found")
   }
+
   # #clean records using coord cleaner
   merged_df <- CoordinateCleaner::clean_coordinates(merged_df,
                                                     lon = "Longitude",
                                                     lat = "Latitude",
                                                     species = "Species",
-                                                    tests = c("capitals","centroids","equal", "gbif", "institutions", "seas","zeros"),
+                                                    tests = c("capitals", "centroids", "equal", "gbif", "institutions", "seas", "zeros"),
                                                     #skip urban test - keeps giving proj4string errors, will look into later
                                                     urban_ref = as_Spatial(read_sf("Data/GIS/ne_50m_urban_areas/ne_50m_urban_areas.shp")),
                                                     seas_ref =  as_Spatial(read_sf("Data/GIS/ne_50m_land/ne_50m_land.shp")),
@@ -168,28 +187,45 @@ load_pres_bg_data <- function(species,
                                                     # outliers_method = "distance",
                                                     # outliers_td = 1500, #outlier bit probably needs tweaking, its curently set to be very conservative
                                                     value = "clean")
+
   #check if duplicate long or lat - could be signal of rounding
+
   suspect.rounding <- ifelse(any(anyDuplicated(merged_df$Longitude),
                                  anyDuplicated(merged_df$Latitude)),"duplicate long/lat found - suspect rounding",NA)
-  #visualise those with fewer than 1k records (can tweak this - I just think there isn't much point to manual input when looking at more than 1k data)
-  if(nrow(merged_df) <= 1000){
-    sp.sf <- st_as_sf(merged_df, coords = (4:5), crs = CRS("+proj=longlat +datum=WGS84"))#all ALA and GBIF coord should be in wgs84 - but this needs attention when adding more dataset in the future (and also some of ALA may be gda94 but incorrectly labelled according to Lee Belbin (I think?) - but this may be beyond our ability to fix)
-    sp.map <- mapview(sp.sf, layer.name = species, homebutton = F)
-    if(save.map == TRUE){
-      mapshot(sp.map, url = paste0(mapfile_directory,"/",species,".html"))
-      cat(paste0("Map is saved to ",mapfile_directory),"\n")
-    }
-  }else{sp.map <- "more than 1k records, not mapped"}
 
-  return(
-    list(
-      raw.ala.data = occ_ala$data,
-      raw.gbif.data = occ_spocc$gbif$data[[1]],
-      processed.data = merged_df,
-      rounding.comment = suspect.rounding,
-      map = sp.map
-    )
-  )
+  #visualise those with fewer than 1k records (can tweak this - I just think there isn't much point to manual input when looking at more than 1k data)
+
+  if(nrow(merged_df) <= 1000){
+
+    sp.sf <- st_as_sf(merged_df,
+                      coords = (4:5),
+                      crs = CRS("+proj=longlat +datum=WGS84"))#all ALA and GBIF coord should be in wgs84 - but this needs attention when adding more dataset in the future (and also some of ALA may be gda94 but incorrectly labelled according to Lee Belbin (I think?) - but this may be beyond our ability to fix)
+
+    sp.map <- mapview(sp.sf,
+                      layer.name = species,
+                      homebutton = FALSE)
+
+    if(save.map == TRUE){
+
+      mapshot(sp.map,
+              url = paste0(mapfile_directory, "/", species, ".html"))
+
+      cat(paste0("Map is saved to ", mapfile_directory), "\n")
+
+    }
+
+  } else {
+
+    sp.map <- "more than 1k records, not mapped"
+
+  }
+
+  return(list(raw.ala.data = occ_ala$data,
+              raw.gbif.data = occ_spocc$gbif$data[[1]],
+              processed.data = merged_df,
+              rounding.comment = suspect.rounding,
+              map = sp.map))
+
 }
 
 # #test run
