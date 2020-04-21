@@ -17,6 +17,14 @@ Imports:
     dismo,
     caret,
     ROCR,
-    raster
+    raster,
+    spocc,
+    ALA4R,
+    stringr,
+    lubridate,
+    CoordinateCleaner,
+    sf,
+    sp,
+    mapview
 Suggests: 
     testthat (>= 2.1.0)
