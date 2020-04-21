@@ -1,16 +1,20 @@
-#' Title
+#' Load Presence-Background Data
 #'
 #' @param species
+#' @param guild
 #' @param region
+#' @param save.map
+#' @param mapfile_directory
+#' @param email
 #'
 #' @return
 #' @export
 #'
 #' @examples
-#'
 
 # test <- occ(query = "Bertmainius colonus", from = c("gbif","ala","inat","ecoengine","vertnet","idigbio"))
 # testALA <- occurrences(taxon = "text:\"Bertmainius colonus\"", download_reason_id = 5, method="offline", email = "tianxiaoh@student.unimelb.edu.au")
+
 
 load_pres_bg_data <- function(species,
                               guild = "ignore",
