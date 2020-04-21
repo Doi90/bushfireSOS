@@ -24,16 +24,14 @@ load_pres_bg_data <- function(species,
   ########name processing#######
   #check if name is properly formed
 
-  if(
-    any(
-      grepl("sp. ",species, fixed = TRUE),
-      grepl("'",species, fixed = TRUE),
-      grepl("\"",species, fixed = TRUE)
-      #add any other exceptions here
-    )
-  ){
-    return("Not run: scientific name not properly formed!")
+  if(any(grepl("sp. ",species, fixed = TRUE),
+         grepl("'",species, fixed = TRUE),
+         grepl("\"",species, fixed = TRUE)
+         #add any other exceptions here
+         )){
+    stop("Not run: scientific name not properly formed!")
   }
+
   #clean name of bracket suffix - assuming the brackets denote subpopulation, and not taxonomic notations
   species <- str_remove(species,"\\(.*\\)")
 
