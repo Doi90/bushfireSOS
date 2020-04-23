@@ -25,8 +25,11 @@ load_pres_bg_data <- function(species,
                               email #needed for ALA4R 'offline' download
                               ){
 
-  ########name processing#######
-  #check if name is properly formed
+  #######################
+  ### Name Processing ###
+  #######################
+
+  ## Check if name is properly formed
 
   if(any(grepl("sp. ",species, fixed = TRUE),
          grepl("'",species, fixed = TRUE),
@@ -36,28 +39,35 @@ load_pres_bg_data <- function(species,
     stop("Not run: scientific name not properly formed!")
   }
 
-  #clean name of bracket suffix - assuming the brackets denote subpopulation, and not taxonomic notations
+  ## Clean name of bracket suffix
+  ### - assuming the brackets denote subpopulation, and not taxonomic notations
+
   species <- stringr::str_remove(species,
                         "\\(.*\\)")
 
-  #remove trailing whitespace
+  ## Remove trailing whitespace
+
   species <- stringr::str_squish(species)
 
-  ########data getting#######
-  #for ala, using ALA4R
-  occ_ala <- ALA4R::occurrences(taxon = paste0("text:\"", species, "\""),
+  ####################
+  ### Data Getting ###
+  ####################
+
+  ## For ala, using ALA4R
+
   occ_ala <- ALA4R::occurrences(taxon = sprintf('text:"%s"',
                                                 species),
                                 download_reason_id = 5,
                                 email = email)
 
-  #for the rest, use spocc
-  #for now ignore guild specific datrabases, just get gbif
+  ## For the rest, use spocc
+  ### for now ignore guild specific databases, just get gbif
+
   occ_spocc <- spocc::occ(query = species,
                           from = "gbif",
                           limit = 100000)
 
-  #if neither search returned data, terminate function
+  ## If neither search returned data, terminate function
 
   if(nrow(occ_ala$data) == 0 & nrow(occ_spocc$gbif$data[[1]]) == 0){
     stop("Not run: no records found")
@@ -78,7 +88,10 @@ load_pres_bg_data <- function(species,
   # }
   # }
 
-  ###merging ala and gbif###
+  ## Merging ALA and GBIF
+
+  ### Add missing columns full of NAs
+
   for(ALA_col in c("eventDate",
                    "basisOfRecord",
                    "locality",
@@ -106,6 +119,8 @@ load_pres_bg_data <- function(species,
 
     }
   }
+
+  ### Merge data.frames
 
   if(nrow(occ_ala$data) > 0 & nrow(occ_spocc$gbif$data[[1]]) > 0){
 
@@ -181,7 +196,11 @@ load_pres_bg_data <- function(species,
     }
   }
 
-  #remove spatial duplicates (other duplicate types may matter, think later)
+  #####################
+  ### Data Cleaning ###
+  #####################
+
+  ## Remove spatial duplicates (other duplicate types may matter, think later)
 
   merged_df$Longitude <- as.numeric(merged_df$Longitude)
 
@@ -189,28 +208,37 @@ load_pres_bg_data <- function(species,
 
   merged_df <- merged_df[!duplicated(merged_df[ , c("Longitude", "Latitude")]), ]
 
-  #get rid of NA long and lats
+  ## Get rid of missing or incomplete long and lats
 
   merged_df <- na.omit(merged_df)
 
-  #get rid of unusable long lat vals (Roozbeh says can save some data here will look into it later)
+  ## Get rid of unusable long lat vals
+  ###  (Roozbeh says can save some data here will look into it later)
 
   merged_df <- merged_df[merged_df$Longitude > -180 &
                            merged_df$Longitude < 180 &
                            merged_df$Latitude > -90 &
                            merged_df$Latitude < 90, ]
-  #check if any record left
+
+  ## Check if any record left
 
   if(nrow(merged_df) == 0){
     stop("Not run: no data with legitimate coordinates found")
   }
 
-  # #clean records using coord cleaner
+  ## Clean records using coord cleaner
+
   merged_df <- CoordinateCleaner::clean_coordinates(merged_df,
                                                     lon = "Longitude",
                                                     lat = "Latitude",
                                                     species = "Species",
-                                                    tests = c("capitals", "centroids", "equal", "gbif", "institutions", "seas", "zeros"),
+                                                    tests = c("capitals",
+                                                              "centroids",
+                                                              "equal",
+                                                              "gbif",
+                                                              "institutions",
+                                                              "seas",
+                                                              "zeros"),
                                                     #skip urban test - keeps giving proj4string errors, will look into later
                                                     # urban_ref = as_Spatial(read_sf("Data/GIS/ne_50m_urban_areas/ne_50m_urban_areas.shp")),
                                                     seas_ref =  NULL, #as_Spatial(read_sf("Data/GIS/ne_50m_land/ne_50m_land.shp")),
@@ -220,12 +248,20 @@ load_pres_bg_data <- function(species,
                                                     # outliers_td = 1500, #outlier bit probably needs tweaking, its curently set to be very conservative
                                                     value = "clean")
 
-  #check if duplicate long or lat - could be signal of rounding
+  ## Check if duplicate long or lat - could be signal of rounding
 
   suspect.rounding <- ifelse(any(anyDuplicated(merged_df$Longitude),
-                                 anyDuplicated(merged_df$Latitude)),"duplicate long/lat found - suspect rounding",NA)
+                                 anyDuplicated(merged_df$Latitude)),
+                             "duplicate long/lat found - suspect rounding",
+                             NA)
 
-  #visualise those with fewer than 1k records (can tweak this - I just think there isn't much point to manual input when looking at more than 1k data)
+  ####################
+  ### Plot Records ###
+  ####################
+
+  ## Visualise those with fewer than 1k records
+  ### (can tweak this - I just think there isn't much point to manual input
+  ###  when looking at more than 1k data)
 
   if(nrow(merged_df) <= 1000){
 
