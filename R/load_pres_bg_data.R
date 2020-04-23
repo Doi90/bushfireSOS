@@ -46,8 +46,9 @@ load_pres_bg_data <- function(species,
   ########data getting#######
   #for ala, using ALA4R
   occ_ala <- ALA4R::occurrences(taxon = paste0("text:\"", species, "\""),
+  occ_ala <- ALA4R::occurrences(taxon = sprintf('text:"%s"',
+                                                species),
                                 download_reason_id = 5,
-                                method = "offline",
                                 email = email)
 
   #for the rest, use spocc
