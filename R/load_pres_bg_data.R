@@ -60,7 +60,7 @@ load_pres_bg_data <- function(species,
   #if neither search returned data, terminate function
 
   if(nrow(occ_ala$data) == 0 & nrow(occ_spocc$gbif$data[[1]]) == 0){
-    stop("Not run: no data found")
+    stop("Not run: no records found")
   }
 
   # #define guild-based database parameter (for now ignore)
