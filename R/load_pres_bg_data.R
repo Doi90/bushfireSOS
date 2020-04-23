@@ -155,7 +155,7 @@ load_pres_bg_data <- function(species,
                               # #this as commentary - not sure how reliable this is
                               # "Data.Underwent.Generalisation" = as.character(occ_ala$data$dataAreGeneralised),
                               "Locality" = occ_ala$data$locality,
-                              "Dataset" = occ_ala$data$dataResourceName,
+                              # "Dataset" = occ_ala$data$dataResourceName,
                               "Institute" = occ_ala$data$institution,
                               "Collection" = occ_ala$data$collection,
                               "Coordinate.Uncertainty.in.Metres" = occ_ala$data$coordinateUncertaintyInMetres)
