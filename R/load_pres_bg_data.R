@@ -173,7 +173,7 @@ load_pres_bg_data <- function(species,
                               # #this as commentary - not sure how reliable this is
                               # "Data.Underwent.Generalisation" = occ_spocc$gbif$data[[1]]$informationWithheld,
                               "Locality" = occ_spocc$gbif$data[[1]]$locality,
-                              "Dataset" = occ_spocc$gbif$data[[1]]$datasetName,
+                              # "Dataset" = occ_spocc$gbif$data[[1]]$datasetName,
                               "Institute" = occ_spocc$gbif$data[[1]]$institutionCode,
                               "Collection" = occ_spocc$gbif$data[[1]]$collectionCode,
                               "Coordinate.Uncertainty.in.Metres" = occ_spocc$gbif$data[[1]]$coordinateUncertaintyInMeters)
