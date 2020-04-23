@@ -17,7 +17,7 @@
 
 
 load_pres_bg_data <- function(species,
-                              guild = "ignore",
+                              # guild = "ignore",
                               #clean = TRUE, #not sure if this needs to be an option because users SHOULD look at maps at least - maybe we should do "autoclean = TRUE"?
                               region = "all",
                               save.map = TRUE,
