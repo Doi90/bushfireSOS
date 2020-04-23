@@ -79,6 +79,33 @@ load_pres_bg_data <- function(species,
   # }
 
   ###merging ala and gbif###
+  for(ALA_col in c("eventDate",
+                   "basisOfRecord",
+                   "locality",
+                   "institution",
+                   "collection",
+                   "coordinateUncertaintyInMetres")){
+
+    if(ALA_col %nin% colnames(occ_ala$data)){
+
+      occ_ala$data[ , ALA_col] <- NA
+
+    }
+  }
+
+  for(GBIF_col in c("eventDate",
+                    "basisOfRecord",
+                    "locality",
+                    "institutionCode",
+                    "collectionCode",
+                    "coordinateUncertaintyInMeters")){
+
+    if(GBIF_col %nin% colnames(occ_spocc$gbif$data[[1]])){
+
+      occ_spocc$gbif$data[[1]][ , GBIF_col] <- NA
+
+    }
+  }
 
   if(nrow(occ_ala$data) > 0 & nrow(occ_spocc$gbif$data[[1]]) > 0){
 
