@@ -239,10 +239,15 @@ load_pres_bg_data <- function(species,
 
     if(save.map == TRUE){
 
-      mapshot(sp.map,
-              url = paste0(mapfile_directory, "/", species, ".html"))
+      map_filename <- sprintf("outputs/data_plots/%s.html",
+                              gsub(" ",
+                                   "_",
+                                   species))
 
-      cat(paste0("Map is saved to ", mapfile_directory), "\n")
+      mapshot(sp.map,
+              url = map_filename)
+
+      cat(paste0("Map is saved to ", map_filename), "\n")
 
     }
 
