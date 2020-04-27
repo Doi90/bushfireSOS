@@ -101,7 +101,7 @@ load_pres_bg_data <- function(species,
 
     if(ALA_col %nin% colnames(occ_ala$data)){
 
-      occ_ala$data[ , ALA_col] <- NA
+      occ_ala$data[ , ALA_col] <- rep(NA, nrow(occ_ala$data))
 
     }
   }
@@ -115,7 +115,7 @@ load_pres_bg_data <- function(species,
 
     if(GBIF_col %nin% colnames(occ_spocc$gbif$data[[1]])){
 
-      occ_spocc$gbif$data[[1]][ , GBIF_col] <- NA
+      occ_spocc$gbif$data[[1]][ , GBIF_col] <- rep(NA, nrow(occ_spocc$gbif$data[[1]]))
 
     }
   }
@@ -159,7 +159,7 @@ load_pres_bg_data <- function(species,
 
     if(nrow(occ_ala$data) > 0 & nrow(occ_spocc$gbif$data[[1]]) == 0){
 
-      merged_df <- data.frame("ID" = seq_along(occ_ala$data),
+      merged_df <- data.frame("ID" = seq_len(nrow(occ_ala$data)),
                               "Origin" = rep("ALA", nrow(occ_ala$data)),
                               "Species" = rep(species, nrow(occ_ala$data)),#we are assuming the search returned all correct species - this needs looking at later on
                               "Longitude" = occ_ala$data$longitude,
@@ -177,7 +177,7 @@ load_pres_bg_data <- function(species,
 
     } else {
 
-      merged_df <- data.frame("ID" = seq_along(occ_spocc$gbif$data[[1]]),
+      merged_df <- data.frame("ID" = seq_len(nrow(occ_spocc$gbif$data[[1]])),
                               "Origin" = rep("GBIF", nrow(occ_spocc$gbif$data[[1]])),
                               "Species" = rep(species, nrow(occ_spocc$gbif$data[[1]])),#we are assuming the search returned all correct species - this needs looking at later on
                               "Longitude" = occ_spocc$gbif$data[[1]]$longitude,
