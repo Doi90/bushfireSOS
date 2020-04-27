@@ -21,7 +21,6 @@ load_pres_bg_data <- function(species,
                               #clean = TRUE, #not sure if this needs to be an option because users SHOULD look at maps at least - maybe we should do "autoclean = TRUE"?
                               region = "all",
                               save.map = TRUE,
-                              mapfile_directory = getwd(), #for storage of mapview maps - I think savin the map locally may be the best temporary option?
                               email #needed for ALA4R 'offline' download
                               ){
 
@@ -210,7 +209,7 @@ load_pres_bg_data <- function(species,
 
   ## Get rid of missing or incomplete long and lats
 
-  merged_df <- na.omit(merged_df)
+  merged_df <- merged_df[!is.na(merged_df$Longitude) | !is.na(merged_df$Latitude), ]
 
   ## Get rid of unusable long lat vals
   ###  (Roozbeh says can save some data here will look into it later)
@@ -304,3 +303,5 @@ load_pres_bg_data <- function(species,
 # #test run
 # test_run <- load_pres_bg_data("Atrichornis rufescens", email = "tianxiaoh@student.unimelb.edu.au", guild = "Birds")
 
+# load_pres_bg_data("Atrichornis rufescens",
+#                   email = "davidpw@student.unimelb.edu.au")
