@@ -21,7 +21,7 @@ load_pres_bg_data <- function(species,
                               #clean = TRUE, #not sure if this needs to be an option because users SHOULD look at maps at least - maybe we should do "autoclean = TRUE"?
                               region = "all",
                               save.map = TRUE,
-                              map.directory = NULL,
+                              map.directory = ".",
                               email #needed for ALA4R 'offline' download
 ){
 
@@ -275,24 +275,13 @@ load_pres_bg_data <- function(species,
 
     if(save.map == TRUE){
 
-      if(!is.null(map.directory)){
-
-        map_filename <- sprintf("%s/%s.html",
+      map_filename <- sprintf("%s/%s.html",
                                 map.directory,
                                 gsub(" ",
                                      "_",
                                      species))
 
-      } else {
-
-        map_filename <- sprintf("outputs/data_plots/%s.html",
-                                gsub(" ",
-                                     "_",
-                                     species))
-
-      }
-
-      htmlwidgets::saveWidget(sp.map,
+      htmlwidgets::saveWidget(sp.map@map,
                               file = map_filename)
 
       cat(paste0("Map is saved to ", map_filename), "\n")
