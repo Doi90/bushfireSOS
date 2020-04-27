@@ -25,6 +25,7 @@ Imports:
     CoordinateCleaner,
     sf,
     sp,
-    mapview
+    mapview,
+    htmlwidgets
 Suggests: 
     testthat (>= 2.1.0)
