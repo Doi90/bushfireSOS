@@ -265,11 +265,11 @@ load_pres_bg_data <- function(species,
 
   if(nrow(merged_df) <= 1000){
 
-    sp.sf <- st_as_sf(merged_df,
+    sp.sf <- sf::st_as_sf(merged_df,
                       coords = (4:5),
-                      crs = CRS("+proj=longlat +datum=WGS84"))#all ALA and GBIF coord should be in wgs84 - but this needs attention when adding more dataset in the future (and also some of ALA may be gda94 but incorrectly labelled according to Lee Belbin (I think?) - but this may be beyond our ability to fix)
+                      crs = sp::CRS("+proj=longlat +datum=WGS84"))#all ALA and GBIF coord should be in wgs84 - but this needs attention when adding more dataset in the future (and also some of ALA may be gda94 but incorrectly labelled according to Lee Belbin (I think?) - but this may be beyond our ability to fix)
 
-    sp.map <- mapview(sp.sf,
+    sp.map <- mapview::mapview(sp.sf,
                       layer.name = species,
                       homebutton = FALSE)
 
