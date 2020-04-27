@@ -21,8 +21,9 @@ load_pres_bg_data <- function(species,
                               #clean = TRUE, #not sure if this needs to be an option because users SHOULD look at maps at least - maybe we should do "autoclean = TRUE"?
                               region = "all",
                               save.map = TRUE,
+                              map.directory = NULL,
                               email #needed for ALA4R 'offline' download
-                              ){
+){
 
   #######################
   ### Name Processing ###
@@ -34,7 +35,7 @@ load_pres_bg_data <- function(species,
          grepl("'",species, fixed = TRUE),
          grepl("\"",species, fixed = TRUE)
          #add any other exceptions here
-         )){
+  )){
     stop("Not run: scientific name not properly formed!")
   }
 
@@ -42,7 +43,7 @@ load_pres_bg_data <- function(species,
   ### - assuming the brackets denote subpopulation, and not taxonomic notations
 
   species <- stringr::str_remove(species,
-                        "\\(.*\\)")
+                                 "\\(.*\\)")
 
   ## Remove trailing whitespace
 
@@ -274,10 +275,22 @@ load_pres_bg_data <- function(species,
 
     if(save.map == TRUE){
 
-      map_filename <- sprintf("outputs/data_plots/%s.html",
-                              gsub(" ",
-                                   "_",
-                                   species))
+      if(!is.null(map.directory)){
+
+        map_filename <- sprintf("%s/%s.html",
+                                map.directory,
+                                gsub(" ",
+                                     "_",
+                                     species))
+
+      } else {
+
+        map_filename <- sprintf("outputs/data_plots/%s.html",
+                                gsub(" ",
+                                     "_",
+                                     species))
+
+      }
 
       mapshot(sp.map,
               url = map_filename)
