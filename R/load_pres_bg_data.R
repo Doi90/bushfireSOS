@@ -292,8 +292,8 @@ load_pres_bg_data <- function(species,
 
       }
 
-      mapshot(sp.map,
-              url = map_filename)
+      htmlwidgets::saveWidget(sp.map,
+                              file = map_filename)
 
       cat(paste0("Map is saved to ", map_filename), "\n")
 
