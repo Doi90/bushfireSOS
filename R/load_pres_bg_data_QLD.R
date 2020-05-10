@@ -1,6 +1,5 @@
-#' Load presence records from VIC DEWLP database
+#' Load presence records from QLD WildNet database
 #'
-#' @param file File path to the gdb folder
 #' @param species Character vector of species scientific name
 #' @param region
 #' @param save.map Logical value to indicate saving the map to file or not
@@ -14,8 +13,7 @@
 #'
 
 
-load_pres_bg_data_VIC <- function(file,
-                                  species,
+load_pres_bg_data_VIC <- function(species,
                                   region = "all",
                                   save.map = TRUE,
                                   map.directory = "."){
