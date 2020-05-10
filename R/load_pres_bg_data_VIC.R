@@ -178,6 +178,7 @@ load_pres_bg_data_VIC <- function(file,
   }
 
   return(list(processed.data = df,
+              raw.VIC.data = VIC_data,
               rounding.comment = suspect.rounding,
               map = sp.map))
 
