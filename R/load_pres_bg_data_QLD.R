@@ -48,33 +48,32 @@ load_pres_bg_data_VIC <- function(species,
   ### Load Data ###
   #################
 
-  ## Load in VIC database from file
+  ## Load in QLD data from file
 
-  VIC_data <- sf::st_read(file,
-                          stringsAsFactors = FALSE)
+  QLD_data <- read.csv(sprintf("spp_data_raw/QLD_%s.csv",
+                               gsub(" ",
+                                    "_",
+                                    tolower(species))),
+                       stringsAsFactors = FALSE)
 
-  ## Filter by species
-
-  VIC_data <- VIC_data[VIC_data$SCI_NAME == species, ]
-
-  if(nrow(VIC_data) == 0){
+  if(nrow(QLD_data) == 0){
     stop("Not run: no records found")
   }
 
   ## Format data
 
-  df <- data.frame("ID" = seq_len(nrow(VIC_data)),
-                   "Origin" = "VIC_DEWLP",
-                   "Species" = unique(VIC_data$SCI_NAME),
-                   "Longitude" = VIC_data$LONG_DD94,
-                   "Latitude" = VIC_data$LAT_DD94,
+  df <- data.frame("ID" = seq_len(nrow(QLD_data)),
+                   "Origin" = "QLD_WildNet",
+                   "Species" = species,
+                   "Longitude" = QLD_data$Longitude,
+                   "Latitude" = QLD_data$Latitude,
                    #add date for duplicate processing
-                   "Date" = VIC_data$STARTDATE,
-                   "Basis.of.Record" = VIC_data$RECORDTYPE,
-                   "Locality" = VIC_data$LOCN_DESC,
-                   "Institute" = "VIC_DEWLP",
-                   "Collection" = VIC_data$COLLECTOR,
-                   "Coordinate.Uncertainty.in.Metres" = VIC_data$MAX_ACC_KM * 1000,
+                   "Date" = QLD_data$StartDate,
+                   "Basis.of.Record" = NA,
+                   "Locality" = QLD_data$LocalityDetails,
+                   "Institute" = QLD_data$OrganisationName,
+                   "Collection" = QLD_data$ProjectName,
+                   "Coordinate.Uncertainty.in.Metres" = QLD_data$LocationPrecision,
                    stringsAsFactors = FALSE)
 
   #####################
@@ -176,7 +175,7 @@ load_pres_bg_data_VIC <- function(species,
   }
 
   return(list(processed.data = df,
-              raw.VIC.data = VIC_data,
+              raw.VIC.data = QLD_data,
               rounding.comment = suspect.rounding,
               map = sp.map))
 
