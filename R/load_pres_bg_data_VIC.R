@@ -1,3 +1,19 @@
+#' Load presence records from VIC DEWLP database
+#'
+#' @param file File path to the gdb folder
+#' @param species Character vector of species scientific name
+#' @param region
+#' @param save.map Logical value to indicate saving the map to file or not
+#' @param map.directory File path to output folder for saving map
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'
+#'
+
+
 load_pres_bg_data_VIC <- function(file,
                                   species,
                                   region = "all",
@@ -168,12 +184,3 @@ load_pres_bg_data_VIC <- function(file,
 }
 
 
-tmp <- load_pres_bg_data_VIC("../bushfireSOS_workflow/bushfireResponse_data/FAUNA_requested_spp_ALL.gdb",
-                             species = species,
-                             save.map = TRUE,
-                             map.directory = getwd())
-
-VIC_data <- sf::st_read("../bushfireSOS_workflow/bushfireResponse_data/FAUNA_requested_spp_ALL.gdb",
-                        stringsAsFactors = FALSE)
-
-species <- "Petauroides volans"
