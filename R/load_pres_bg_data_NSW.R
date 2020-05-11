@@ -1,6 +1,5 @@
-#' Load presence records from VIC DEWLP database
+#' Load presence records from NSW database
 #'
-#' @param file File path to the gdb folder
 #' @param species Character vector of species scientific name
 #' @param region
 #' @param save.map Logical value to indicate saving the map to file or not
@@ -14,8 +13,7 @@
 #'
 
 
-load_pres_bg_data_VIC <- function(file,
-                                  species,
+load_pres_bg_data_VIC <- function(species,
                                   region = "all",
                                   save.map = TRUE,
                                   map.directory = "."){
@@ -50,33 +48,41 @@ load_pres_bg_data_VIC <- function(file,
   ### Load Data ###
   #################
 
-  ## Load in VIC database from file
+  NSW_data <- read.table(sprintf("spp_data_raw/NSW_%s.txt",
+                                 gsub(" ",
+                                      "_",
+                                      tolower(species))),
+                         stringsAsFactors = FALSE,
+                         sep = "\t",
+                         skip = 4,
+                         header = TRUE)
 
-  VIC_data <- sf::st_read(file,
-                          stringsAsFactors = FALSE)
-
-  ## Filter by species
-
-  VIC_data <- VIC_data[VIC_data$SCI_NAME == species, ]
-
-  if(nrow(VIC_data) == 0){
+  if(nrow(NSW_data) == 0){
     stop("Not run: no records found")
   }
 
   ## Format data
 
-  df <- data.frame("ID" = seq_len(nrow(VIC_data)),
-                   "Origin" = "VIC_DEWLP",
-                   "Species" = unique(VIC_data$SCI_NAME),
-                   "Longitude" = VIC_data$LONG_DD94,
-                   "Latitude" = VIC_data$LAT_DD94,
+  NSW_data$ObservationType <- ifelse(all(NSW_data$ObservationType == TRUE),
+                                     "T",
+                                     NSW_data$ObservationType)
+
+  NSW_data$ObservationType <- ifelse(all(NSW_data$ObservationType == FALSE),
+                                     "F",
+                                     NSW_data$ObservationType)
+
+  df <- data.frame("ID" = seq_len(nrow(NSW_data)),
+                   "Origin" = NSW_data$DatasetName,
+                   "Species" = NSW_data$ScientificName,
+                   "Longitude" = NSW_data$Longitude_GDA94,
+                   "Latitude" = NSW_data$Latitude_GDA94,
                    #add date for duplicate processing
-                   "Date" = VIC_data$STARTDATE,
-                   "Basis.of.Record" = VIC_data$RECORDTYPE,
-                   "Locality" = VIC_data$LOCN_DESC,
-                   "Institute" = "VIC_DEWLP",
-                   "Collection" = VIC_data$COLLECTOR,
-                   "Coordinate.Uncertainty.in.Metres" = VIC_data$MAX_ACC_KM * 1000,
+                   "Date" = NSW_data$DateFirst,
+                   "Basis.of.Record" = NSW_data$ObservationType,
+                   "Locality" = NSW_data$Description,
+                   "Institute" = NSW_data$DatasetName,
+                   "Collection" = NSW_data$Observers,
+                   "Coordinate.Uncertainty.in.Metres" = NSW_data$Accuracy,
                    stringsAsFactors = FALSE)
 
   #####################
@@ -178,7 +184,7 @@ load_pres_bg_data_VIC <- function(file,
   }
 
   return(list(processed.data = df,
-              raw.VIC.data = VIC_data,
+              raw.VIC.data = NSW_data,
               rounding.comment = suspect.rounding,
               map = sp.map))
 
