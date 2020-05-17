@@ -67,7 +67,7 @@ load_pres_bg_data_AUS <- function(species,
                                                         stringsAsFactors = FALSE)})
 
     df <- rbind(df,
-                df_tmp)
+                df_tmp$processed.data)
 
     if(is.list(df_tmp)){
 
@@ -97,7 +97,7 @@ load_pres_bg_data_AUS <- function(species,
                                                         stringsAsFactors = FALSE)})
 
     df <- rbind(df,
-                df_tmp)
+                df_tmp$processed.data)
 
     if(is.list(df_tmp)){
 
@@ -127,7 +127,7 @@ load_pres_bg_data_AUS <- function(species,
                                                         stringsAsFactors = FALSE)})
 
     df <- rbind(df,
-                df_tmp)
+                df_tmp$processed.data)
 
     if(is.list(df_tmp)){
 
@@ -157,7 +157,7 @@ load_pres_bg_data_AUS <- function(species,
   #                                                       stringsAsFactors = FALSE)})
   #
   #   df <- rbind(df,
-  #               df_tmp)
+  #               df_tmp$processed.data)
   #
   # }
 
@@ -181,7 +181,7 @@ load_pres_bg_data_AUS <- function(species,
   #                                                       stringsAsFactors = FALSE)})
   #
   #   df <- rbind(df,
-  #               df_tmp)
+  #               df_tmp$processed.data)
   #
   # }
 
