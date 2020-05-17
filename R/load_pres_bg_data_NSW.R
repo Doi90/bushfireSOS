@@ -13,7 +13,7 @@
 #'
 
 
-load_pres_bg_data_VIC <- function(species,
+load_pres_bg_data_NSW <- function(species,
                                   region = "all",
                                   save.map = TRUE,
                                   map.directory = "."){
@@ -48,7 +48,7 @@ load_pres_bg_data_VIC <- function(species,
   ### Load Data ###
   #################
 
-  NSW_data <- read.table(sprintf("spp_data_raw/NSW_%s.txt",
+  NSW_data <- read.table(sprintf("bushfireResponse_data/spp_data_raw/NSW_%s.txt",
                                  gsub(" ",
                                       "_",
                                       tolower(species))),
@@ -184,7 +184,7 @@ load_pres_bg_data_VIC <- function(species,
   }
 
   return(list(processed.data = df,
-              raw.VIC.data = NSW_data,
+              raw.NSW.data = NSW_data,
               rounding.comment = suspect.rounding,
               map = sp.map))
 
