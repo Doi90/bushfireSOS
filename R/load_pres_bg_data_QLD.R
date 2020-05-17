@@ -13,7 +13,7 @@
 #'
 
 
-load_pres_bg_data_VIC <- function(species,
+load_pres_bg_data_QLD <- function(species,
                                   region = "all",
                                   save.map = TRUE,
                                   map.directory = "."){
