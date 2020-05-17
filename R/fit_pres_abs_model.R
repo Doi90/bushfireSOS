@@ -39,5 +39,5 @@ fit_pres_abs_model <- function(spp_data,
                          silent = TRUE) # avoid printing the cv results
 
   return(brt)
-♥
+
 }
