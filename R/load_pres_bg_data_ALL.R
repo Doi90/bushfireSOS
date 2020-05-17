@@ -1,3 +1,18 @@
+#' Download presence-only records for a species from all state databases
+#'
+#' @param species Character vector of species scientific name
+#' @param region
+#' @param file.vic File path to the gdb folder
+#' @param email
+#' @param save.map Logical value to indicate saving the map to file or not
+#' @param map.directory File path to output folder for saving map
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'
+
 load_pres_bg_data_AUS <- function(species,
                                   region,
                                   file.vic,
@@ -25,6 +40,10 @@ load_pres_bg_data_AUS <- function(species,
                    "Coordinate.Uncertainty.in.Metres" = numeric(),
                    stringsAsFactors = FALSE)
 
+  ## Output raw data list
+
+  raw_data <- list()
+
   ## Get state data
 
   if("VIC" %in% region){
@@ -50,6 +69,12 @@ load_pres_bg_data_AUS <- function(species,
     df <- rbind(df,
                 df_tmp)
 
+    if(is.list(df_tmp)){
+
+      raw_data$VIC <- df_tmp$raw.VIC.data
+
+    }
+
   }
 
   if("NSW" %in% region){
@@ -74,6 +99,12 @@ load_pres_bg_data_AUS <- function(species,
     df <- rbind(df,
                 df_tmp)
 
+    if(is.list(df_tmp)){
+
+      raw_data$NSW <- df_tmp$raw.NSW.data
+
+    }
+
   }
 
   if("QLD" %in% region){
@@ -97,6 +128,12 @@ load_pres_bg_data_AUS <- function(species,
 
     df <- rbind(df,
                 df_tmp)
+
+    if(is.list(df_tmp)){
+
+      raw_data$QLD <- df_tmp$raw.QLD.data
+
+    }
 
   }
 
@@ -248,8 +285,9 @@ load_pres_bg_data_AUS <- function(species,
 
   }
 
-  return()
-
-
+  return(list(data = df,
+              raw.data = raw_data,
+              rounding.comment = suspect.rounding,
+              map = sp.map))
 
 }
