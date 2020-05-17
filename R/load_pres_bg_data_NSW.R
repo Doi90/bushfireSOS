@@ -184,7 +184,7 @@ load_pres_bg_data_NSW <- function(species,
   }
 
   return(list(processed.data = df,
-              raw.VIC.data = NSW_data,
+              raw.NSW.data = NSW_data,
               rounding.comment = suspect.rounding,
               map = sp.map))
 
