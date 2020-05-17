@@ -50,7 +50,7 @@ load_pres_bg_data_QLD <- function(species,
 
   ## Load in QLD data from file
 
-  QLD_data <- read.csv(sprintf("spp_data_raw/QLD_%s.csv",
+  QLD_data <- read.csv(sprintf("bushfireResponse_data/spp_data_raw/QLD_%s.csv",
                                gsub(" ",
                                     "_",
                                     tolower(species))),

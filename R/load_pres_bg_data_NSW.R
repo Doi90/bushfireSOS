@@ -48,7 +48,7 @@ load_pres_bg_data_NSW <- function(species,
   ### Load Data ###
   #################
 
-  NSW_data <- read.table(sprintf("spp_data_raw/NSW_%s.txt",
+  NSW_data <- read.table(sprintf("bushfireResponse_data/spp_data_raw/NSW_%s.txt",
                                  gsub(" ",
                                       "_",
                                       tolower(species))),
