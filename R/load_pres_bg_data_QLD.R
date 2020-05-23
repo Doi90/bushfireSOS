@@ -68,7 +68,7 @@ load_pres_bg_data_QLD <- function(species,
                    "Longitude" = QLD_data$Longitude,
                    "Latitude" = QLD_data$Latitude,
                    #add date for duplicate processing
-                   "Date" = QLD_data$StartDate,
+                   "Date" = lubridate::as_date(QLD_data$StartDate),
                    "Basis.of.Record" = NA,
                    "Locality" = QLD_data$LocalityDetails,
                    "Institute" = QLD_data$OrganisationName,

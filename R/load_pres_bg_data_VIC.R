@@ -71,7 +71,7 @@ load_pres_bg_data_VIC <- function(file,
                    "Longitude" = VIC_data$LONG_DD94,
                    "Latitude" = VIC_data$LAT_DD94,
                    #add date for duplicate processing
-                   "Date" = VIC_data$STARTDATE,
+                   "Date" = lubridate::as_date(VIC_data$STARTDATE),
                    "Basis.of.Record" = VIC_data$RECORDTYPE,
                    "Locality" = VIC_data$LOCN_DESC,
                    "Institute" = "VIC_DEWLP",

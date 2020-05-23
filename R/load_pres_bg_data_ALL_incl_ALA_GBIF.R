@@ -14,11 +14,11 @@
 #'
 
 load_pres_bg_data_AUS_incl_ALA_GBIF <- function(species,
-                                  region = c("VIC","NSW","QLD"),
-                                  file.vic,
-                                  email,
-                                  save.map,
-                                  map.directory){
+                                                region = c("VIC","NSW","QLD"),
+                                                file.vic,
+                                                email,
+                                                save.map,
+                                                map.directory){
 
   ########################
   ### Get Species Data ###
@@ -52,19 +52,19 @@ load_pres_bg_data_AUS_incl_ALA_GBIF <- function(species,
                                                     species = species,
                                                     save.map = FALSE,
                                                     map.directory = map.directory),
-                       error = function(err){data.frame("ID" = numeric(),
-                                                        "Origin" = character(),
-                                                        "Species" = character(),
-                                                        "Longitude" = numeric(),
-                                                        "Latitude" = numeric(),
-                                                        #add date for duplicate processing
-                                                        "Date" = numeric(),
-                                                        "Basis.of.Record" = character(),
-                                                        "Locality" = character(),
-                                                        "Institute" = character(),
-                                                        "Collection" = character(),
-                                                        "Coordinate.Uncertainty.in.Metres" = numeric(),
-                                                        stringsAsFactors = FALSE)})
+                       error = function(err){return(data.frame("ID" = numeric(),
+                                                               "Origin" = character(),
+                                                               "Species" = character(),
+                                                               "Longitude" = numeric(),
+                                                               "Latitude" = numeric(),
+                                                               #add date for duplicate processing
+                                                               "Date" = numeric(),
+                                                               "Basis.of.Record" = character(),
+                                                               "Locality" = character(),
+                                                               "Institute" = character(),
+                                                               "Collection" = character(),
+                                                               "Coordinate.Uncertainty.in.Metres" = numeric(),
+                                                               stringsAsFactors = FALSE))})
 
     df <- rbind(df,
                 df_tmp$processed.data)
@@ -82,19 +82,19 @@ load_pres_bg_data_AUS_incl_ALA_GBIF <- function(species,
     df_tmp <- tryCatch(expr = load_pres_bg_data_NSW(species = species,
                                                     save.map = FALSE,
                                                     map.directory = map.directory),
-                       error = function(err){data.frame("ID" = numeric(),
-                                                        "Origin" = character(),
-                                                        "Species" = character(),
-                                                        "Longitude" = numeric(),
-                                                        "Latitude" = numeric(),
-                                                        #add date for duplicate processing
-                                                        "Date" = numeric(),
-                                                        "Basis.of.Record" = character(),
-                                                        "Locality" = character(),
-                                                        "Institute" = character(),
-                                                        "Collection" = character(),
-                                                        "Coordinate.Uncertainty.in.Metres" = numeric(),
-                                                        stringsAsFactors = FALSE)})
+                       error = function(err){return(data.frame("ID" = numeric(),
+                                                               "Origin" = character(),
+                                                               "Species" = character(),
+                                                               "Longitude" = numeric(),
+                                                               "Latitude" = numeric(),
+                                                               #add date for duplicate processing
+                                                               "Date" = numeric(),
+                                                               "Basis.of.Record" = character(),
+                                                               "Locality" = character(),
+                                                               "Institute" = character(),
+                                                               "Collection" = character(),
+                                                               "Coordinate.Uncertainty.in.Metres" = numeric(),
+                                                               stringsAsFactors = FALSE))})
 
     df <- rbind(df,
                 df_tmp$processed.data)
@@ -112,19 +112,21 @@ load_pres_bg_data_AUS_incl_ALA_GBIF <- function(species,
     df_tmp <- tryCatch(expr = load_pres_bg_data_QLD(species = species,
                                                     save.map = FALSE,
                                                     map.directory = map.directory),
-                       error = function(err){data.frame("ID" = numeric(),
-                                                        "Origin" = character(),
-                                                        "Species" = character(),
-                                                        "Longitude" = numeric(),
-                                                        "Latitude" = numeric(),
-                                                        #add date for duplicate processing
-                                                        "Date" = numeric(),
-                                                        "Basis.of.Record" = character(),
-                                                        "Locality" = character(),
-                                                        "Institute" = character(),
-                                                        "Collection" = character(),
-                                                        "Coordinate.Uncertainty.in.Metres" = numeric(),
-                                                        stringsAsFactors = FALSE)})
+                       error = function(err){
+                         return(data.frame("ID" = numeric(),
+                                           "Origin" = character(),
+                                           "Species" = character(),
+                                           "Longitude" = numeric(),
+                                           "Latitude" = numeric(),
+                                           #add date for duplicate processing
+                                           "Date" = numeric(),
+                                           "Basis.of.Record" = character(),
+                                           "Locality" = character(),
+                                           "Institute" = character(),
+                                           "Collection" = character(),
+                                           "Coordinate.Uncertainty.in.Metres" = numeric(),
+                                           stringsAsFactors = FALSE))
+                       })
 
     df <- rbind(df,
                 df_tmp$processed.data)
@@ -187,32 +189,35 @@ load_pres_bg_data_AUS_incl_ALA_GBIF <- function(species,
 
   ## Get national data
 
-    df_tmp <- tryCatch(expr = load_pres_bg_data(species = species,
-                                                    save.map = FALSE,
-                                                    map.directory = map.directory, email = email),
-                       error = function(err){data.frame("ID" = numeric(),
-                                                        "Origin" = character(),
-                                                        "Species" = character(),
-                                                        "Longitude" = numeric(),
-                                                        "Latitude" = numeric(),
-                                                        #add date for duplicate processing
-                                                        "Date" = numeric(),
-                                                        "Basis.of.Record" = character(),
-                                                        "Locality" = character(),
-                                                        "Institute" = character(),
-                                                        "Collection" = character(),
-                                                        "Coordinate.Uncertainty.in.Metres" = numeric(),
-                                                        stringsAsFactors = FALSE)})
+  df_tmp <- tryCatch(expr = load_pres_bg_data(species = species,
+                                              save.map = FALSE,
+                                              map.directory = map.directory,
+                                              email = email),
+                     error = function(err){
+                       return(data.frame("ID" = numeric(),
+                                         "Origin" = character(),
+                                         "Species" = character(),
+                                         "Longitude" = numeric(),
+                                         "Latitude" = numeric(),
+                                         #add date for duplicate processing
+                                         "Date" = numeric(),
+                                         "Basis.of.Record" = character(),
+                                         "Locality" = character(),
+                                         "Institute" = character(),
+                                         "Collection" = character(),
+                                         "Coordinate.Uncertainty.in.Metres" = numeric(),
+                                         stringsAsFactors = FALSE))
+                     })
 
-    df <- rbind(df,
-                df_tmp$processed.data)
+  df <- rbind(df,
+              df_tmp$processed.data)
 
-    if(is.list(df_tmp)){
+  if(is.list(df_tmp)){
 
-      raw_data$ala <- df_tmp$raw.ala.data
-      raw_data$gbif <- df_tmp$raw.gbif.data
+    raw_data$ala <- df_tmp$raw.ala.data
+    raw_data$gbif <- df_tmp$raw.gbif.data
 
-    }
+  }
 
   ## Check for duplicate records due to state database overlap
 
