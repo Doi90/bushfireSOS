@@ -1,3 +1,4 @@
+
 #' Fit a Presence-Background Species Distribution Model
 #'
 #' @param spp_data

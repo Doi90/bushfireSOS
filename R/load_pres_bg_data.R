@@ -60,12 +60,16 @@ load_pres_bg_data <- function(species,
                                 download_reason_id = 5,
                                 email = email)
 
+  occ_ala$data$eventDate <- lubridate::as_date(occ_ala$data$eventDate)
+
   ## For the rest, use spocc
   ### for now ignore guild specific databases, just get gbif
 
   occ_spocc <- spocc::occ(query = species,
                           from = "gbif",
                           limit = 100000)
+
+  occ_spocc$gbif$data[[1]]$eventDate <- lubridate::as_date(occ_spocc$gbif$data[[1]]$eventDate)
 
   ## If neither search returned data, terminate function
 
