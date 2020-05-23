@@ -144,6 +144,16 @@ load_pres_bg_data_NSW <- function(species,
                              "duplicate long/lat found - suspect rounding",
                              NA)
 
+
+  ##reproject data from GDA94 to WGS84
+  sp.sf <- sf::st_as_sf(df,
+                        coords = (4:5),
+                        crs = 4283)
+  sp.sf <- sf::st_transform(sp.sf, 4326)
+  df[,4:5] <- sf::st_coordinates(sp.sf)
+
+
+
   ####################
   ### Plot Records ###
   ####################
@@ -154,9 +164,6 @@ load_pres_bg_data_NSW <- function(species,
 
   if(nrow(df) <= 1000){
 
-    sp.sf <- sf::st_as_sf(df,
-                          coords = (4:5),
-                          crs = sp::CRS("+proj=longlat +datum=WGS84"))#all ALA and GBIF coord should be in wgs84 - but this needs attention when adding more dataset in the future (and also some of ALA may be gda94 but incorrectly labelled according to Lee Belbin (I think?) - but this may be beyond our ability to fix)
 
     sp.map <- mapview::mapview(sp.sf,
                                layer.name = species,
