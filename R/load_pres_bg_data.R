@@ -88,6 +88,27 @@ load_pres_bg_data <- function(species,
   # }
   # }
 
+
+  ###remove generalised data (as much as possible)
+
+  #we first do this through generalisation column (not always there)
+  if("dataAreGeneralised" %in% colnames(occ_ala$data)){
+    occ_ala$data <- occ_ala$data[occ_ala$data$dataAreGeneralised == FALSE,]
+  }
+  if("dataGeneralizations" %in% colnames(occ_spocc$gbif$data[[1]])){
+    occ_spocc$gbif$data[[1]] <- occ_spocc$gbif$data[[1]][!grepl("generalised",occ_spocc$gbif$data[[1]]$dataGeneralizations,),]
+  }#this may be a bit dodgy - the GBIF column may not necessarily contain full info about data generalisation (ie also used for taxonomic comments), but this may be the best we can do\
+  if("informationWithheld" %in% colnames(occ_spocc$gbif$data[[1]])){
+    occ_spocc$gbif$data[[1]] <- occ_spocc$gbif$data[[1]][is.na(occ_spocc$gbif$data[[1]]$informationWithheld),]
+  }
+
+  #then we remove data from known collections that consistently generalise their coordinates (also because we have the original data)
+  occ_ala$data <- occ_ala$data[occ_ala$data$dataResourceName %nin% c("OEH Atlas of NSW Wildlife",
+                                                      "WildNet - Queensland Wildlife Data",
+                                                      "Victorian Biodiversity Atlas"),]
+  occ_spocc$gbif$data[[1]] <- occ_spocc$gbif$data[[1]][occ_spocc$gbif$data[[1]]$collectionCode != "BioNet Atlas of NSW Wildlife",]#VBA and WildNet are not identifiable in GBIF, this is the best we can do, after a quick check this seems ok (ie remaining records at least look ok)
+
+
   ## Merging ALA and GBIF
 
   ### Add missing columns full of NAs
@@ -153,7 +174,8 @@ load_pres_bg_data <- function(species,
                             "Collection" = c(occ_ala$data$collection,
                                              occ_spocc$gbif$data[[1]]$collectionCode),
                             "Coordinate.Uncertainty.in.Metres" = c(occ_ala$data$coordinateUncertaintyInMetres,
-                                                                   occ_spocc$gbif$data[[1]]$coordinateUncertaintyInMeters))
+                                                                   occ_spocc$gbif$data[[1]]$coordinateUncertaintyInMeters),
+                            stringsAsFactors = FALSE)
 
   } else { #if one of the search is empty, then don't merge, but use the merged dataset structure for subsequent cleaning
 
@@ -173,7 +195,8 @@ load_pres_bg_data <- function(species,
                               # "Dataset" = occ_ala$data$dataResourceName,
                               "Institute" = occ_ala$data$institution,
                               "Collection" = occ_ala$data$collection,
-                              "Coordinate.Uncertainty.in.Metres" = occ_ala$data$coordinateUncertaintyInMetres)
+                              "Coordinate.Uncertainty.in.Metres" = occ_ala$data$coordinateUncertaintyInMetres,
+                              stringsAsFactors = FALSE)
 
     } else {
 
@@ -191,7 +214,8 @@ load_pres_bg_data <- function(species,
                               # "Dataset" = occ_spocc$gbif$data[[1]]$datasetName,
                               "Institute" = occ_spocc$gbif$data[[1]]$institutionCode,
                               "Collection" = occ_spocc$gbif$data[[1]]$collectionCode,
-                              "Coordinate.Uncertainty.in.Metres" = occ_spocc$gbif$data[[1]]$coordinateUncertaintyInMeters)
+                              "Coordinate.Uncertainty.in.Metres" = occ_spocc$gbif$data[[1]]$coordinateUncertaintyInMeters,
+                              stringsAsFactors = FALSE)
 
     }
   }
