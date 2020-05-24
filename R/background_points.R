@@ -1,29 +1,49 @@
-background_points <- function(){
+background_points <- function(species,
+                              spp_data,
+                              env_data,
+                              guild,
+                              region){
 
-  ## Generate background points
+  ## Read in full target group background data
 
-  background_points <- dismo::randomPoints(env_data[[1]],
-                                           10000)
+  all_background <- readsRDS("")
 
-  background_points$value <- 0
+  ## Filter background points
 
-  colnames(background_points) <- c("lon",
-                                   "lat",
-                                   "value")
+  filter_bg <- all_background[all_background$Guild == guild &
+                                all_background$Species != species, ]
 
-  spp_data <- rbind(spp_data,
-                    cbind(background_points,
-                          unique(spp_data$species)))
+  #TODO Add region filter here
 
-  ## Extract raster data at point locations
-
-  env_values <- raster::extract(env_data,
-                                spp_data[ , c("lon", "lat")])
-
-  spp_data <- rbind(spp_data,
-                    env_values)
+  filter_bg <- filter_bg
 
 
+  ## Sample from remaining background points
+  ##TODO Set number of samples based on number of presences?
+  ##TODO Column subsetting
+
+  if(nrow(filter_bg) >= 1000){
+
+    bg <- filter_bg[sample(seq_len(nrow(filter_bg)),
+                           1000,
+                           replace = FALSE), ]
+
+  } else {
+
+    ## Generate background points
+
+    bg <- dismo::randomPoints(env_data[[1]],
+                              10000)
+
+    bg$value <- 0
+
+    colnames(bg) <- c("lon",
+                      "lat",
+                      "value")
+
+  }
+
+  ## Combine spp and bg dfs
 
 
 }
