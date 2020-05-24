@@ -1,9 +1,9 @@
-#' Download presence-only records for a species from all state databases
+#' Download presence-only records for a species from all state and national databases
 #'
 #' @param species Character vector of species scientific name
-#' @param region
+#' @param region Character vector of state databases to search (all caps, 2/3 letter acronymns)
 #' @param file.vic File path to the gdb folder
-#' @param email
+#' @param email Character. To access ALA records
 #' @param save.map Logical value to indicate saving the map to file or not
 #' @param map.directory File path to output folder for saving map
 #'
@@ -14,7 +14,7 @@
 #'
 
 load_pres_bg_data_AUS <- function(species,
-                                  region,
+                                  region = c("VIC","NSW","QLD"),
                                   file.vic,
                                   email,
                                   save.map,
@@ -52,19 +52,21 @@ load_pres_bg_data_AUS <- function(species,
                                                     species = species,
                                                     save.map = FALSE,
                                                     map.directory = map.directory),
-                       error = function(err){return(data.frame("ID" = numeric(),
-                                                               "Origin" = character(),
-                                                               "Species" = character(),
-                                                               "Longitude" = numeric(),
-                                                               "Latitude" = numeric(),
-                                                               #add date for duplicate processing
-                                                               "Date" = numeric(),
-                                                               "Basis.of.Record" = character(),
-                                                               "Locality" = character(),
-                                                               "Institute" = character(),
-                                                               "Collection" = character(),
-                                                               "Coordinate.Uncertainty.in.Metres" = numeric(),
-                                                               stringsAsFactors = FALSE))})
+                       error = function(err){
+                         return(list(processed.data = data.frame("ID" = numeric(),
+                                                                 "Origin" = character(),
+                                                                 "Species" = character(),
+                                                                 "Longitude" = numeric(),
+                                                                 "Latitude" = numeric(),
+                                                                 #add date for duplicate processing
+                                                                 "Date" = lubridate::as_date(numeric()),
+                                                                 "Basis.of.Record" = character(),
+                                                                 "Locality" = character(),
+                                                                 "Institute" = character(),
+                                                                 "Collection" = character(),
+                                                                 "Coordinate.Uncertainty.in.Metres" = numeric(),
+                                                                 stringsAsFactors = FALSE)))
+                       })
 
     df <- rbind(df,
                 df_tmp$processed.data)
@@ -82,19 +84,21 @@ load_pres_bg_data_AUS <- function(species,
     df_tmp <- tryCatch(expr = load_pres_bg_data_NSW(species = species,
                                                     save.map = FALSE,
                                                     map.directory = map.directory),
-                       error = function(err){return(data.frame("ID" = numeric(),
-                                                               "Origin" = character(),
-                                                               "Species" = character(),
-                                                               "Longitude" = numeric(),
-                                                               "Latitude" = numeric(),
-                                                               #add date for duplicate processing
-                                                               "Date" = numeric(),
-                                                               "Basis.of.Record" = character(),
-                                                               "Locality" = character(),
-                                                               "Institute" = character(),
-                                                               "Collection" = character(),
-                                                               "Coordinate.Uncertainty.in.Metres" = numeric(),
-                                                               stringsAsFactors = FALSE))})
+                       error = function(err){
+                         return(list(processed.data = data.frame("ID" = numeric(),
+                                                                 "Origin" = character(),
+                                                                 "Species" = character(),
+                                                                 "Longitude" = numeric(),
+                                                                 "Latitude" = numeric(),
+                                                                 #add date for duplicate processing
+                                                                 "Date" = lubridate::as_date(numeric()),
+                                                                 "Basis.of.Record" = character(),
+                                                                 "Locality" = character(),
+                                                                 "Institute" = character(),
+                                                                 "Collection" = character(),
+                                                                 "Coordinate.Uncertainty.in.Metres" = numeric(),
+                                                                 stringsAsFactors = FALSE)))
+                       })
 
     df <- rbind(df,
                 df_tmp$processed.data)
@@ -112,19 +116,21 @@ load_pres_bg_data_AUS <- function(species,
     df_tmp <- tryCatch(expr = load_pres_bg_data_QLD(species = species,
                                                     save.map = FALSE,
                                                     map.directory = map.directory),
-                       error = function(err){return(data.frame("ID" = numeric(),
-                                                               "Origin" = character(),
-                                                               "Species" = character(),
-                                                               "Longitude" = numeric(),
-                                                               "Latitude" = numeric(),
-                                                               #add date for duplicate processing
-                                                               "Date" = numeric(),
-                                                               "Basis.of.Record" = character(),
-                                                               "Locality" = character(),
-                                                               "Institute" = character(),
-                                                               "Collection" = character(),
-                                                               "Coordinate.Uncertainty.in.Metres" = numeric(),
-                                                               stringsAsFactors = FALSE))})
+                       error = function(err){
+                         return(list(processed.data = data.frame("ID" = numeric(),
+                                                                 "Origin" = character(),
+                                                                 "Species" = character(),
+                                                                 "Longitude" = numeric(),
+                                                                 "Latitude" = numeric(),
+                                                                 #add date for duplicate processing
+                                                                 "Date" = lubridate::as_date(numeric()),
+                                                                 "Basis.of.Record" = character(),
+                                                                 "Locality" = character(),
+                                                                 "Institute" = character(),
+                                                                 "Collection" = character(),
+                                                                 "Coordinate.Uncertainty.in.Metres" = numeric(),
+                                                                 stringsAsFactors = FALSE)))
+                       })
 
     df <- rbind(df,
                 df_tmp$processed.data)
@@ -185,6 +191,38 @@ load_pres_bg_data_AUS <- function(species,
   #
   # }
 
+  ## Get national data
+
+  df_tmp <- tryCatch(expr = load_pres_bg_data(species = species,
+                                              save.map = FALSE,
+                                              map.directory = map.directory,
+                                              email = email),
+                     error = function(err){
+                       return(list(processed.data = data.frame("ID" = numeric(),
+                                                               "Origin" = character(),
+                                                               "Species" = character(),
+                                                               "Longitude" = numeric(),
+                                                               "Latitude" = numeric(),
+                                                               #add date for duplicate processing
+                                                               "Date" = lubridate::as_date(numeric()),
+                                                               "Basis.of.Record" = character(),
+                                                               "Locality" = character(),
+                                                               "Institute" = character(),
+                                                               "Collection" = character(),
+                                                               "Coordinate.Uncertainty.in.Metres" = numeric(),
+                                                               stringsAsFactors = FALSE)))
+                     })
+
+  df <- rbind(df,
+              df_tmp$processed.data)
+
+  if(is.list(df_tmp)){
+
+    raw_data$ala <- df_tmp$raw.ala.data
+    raw_data$gbif <- df_tmp$raw.gbif.data
+
+  }
+
   ## Check for duplicate records due to state database overlap
 
   #####################
@@ -239,12 +277,12 @@ load_pres_bg_data_AUS <- function(species,
                                              # outliers_td = 1500, #outlier bit probably needs tweaking, its curently set to be very conservative
                                              value = "clean")
 
-  ## Check if duplicate long or lat - could be signal of rounding
-
-  suspect.rounding <- ifelse(any(anyDuplicated(df$df),
-                                 anyDuplicated(df$Latitude)),
-                             "duplicate long/lat found - suspect rounding",
-                             NA)
+  # ## Check if duplicate long or lat - could be signal of rounding
+  #
+  # suspect.rounding <- ifelse(any(anyDuplicated(df$df),
+  #                                anyDuplicated(df$Latitude)),
+  #                            "duplicate long/lat found - suspect rounding",
+  #                            NA)
 
   ####################
   ### Plot Records ###
@@ -287,7 +325,6 @@ load_pres_bg_data_AUS <- function(species,
 
   return(list(data = df,
               raw.data = raw_data,
-              rounding.comment = suspect.rounding,
               map = sp.map))
 
 }
