@@ -12,31 +12,52 @@
 #'
 #'
 
+mask_species_data <- function(spdata, region){
 
-    mask_species_data <- function(spdata, region){
+  ## Check if the inputs are in expected format
 
-      ##check if the inputs are in expected format
-      if(!is.data.frame(spdata) | !is.character(region)){
-        stop("input not in expected classes")
-      }
+  if(!is.data.frame(spdata) | !is.character(region)){
+    stop("input not in expected classes")
+  }
 
-      #check if expected column names exist
-      if(any(c("Longitude","Latitude") %nin% colnames(spdata))){
-        stop("Longitude and Latitude columns not found in species data, check column names")
-      }
+  ## Convert region character
 
-      #convert spdata to a sf object
-      spdata.sf <- sf::st_as_sf(spdata,coords = c("Longitude","Latitude"),crs = 4326)
+  region <- gsub("VIC", "Victoria", region)
+  region <- gsub("NSW", "New South Wales", region)
+  region <- gsub("QLD", "Queensland", region)
+  region <- gsub("SA", "South Australia", region)
+  region <- gsub("WA", "Western Australia", region)
+  region <- gsub("NT", "Northern Territory", region)
+  region <- gsub("TAS", "Tasmania", region)
+  region <- gsub("ACT", "Australian Capital Territory", region)
 
-      #get state polygon data and make it sf
-      AUS.shapes <- rnaturalearth::ne_states("australia",returnclass = "sf")
+  ## Check if expected column names exist
 
-      #assign state to each record
-      spdata.state.assignment <- unlist(sf::st_intersects(spdata.sf, AUS.shapes))
-      spdata.state.assignment <- AUS.shapes$name[spdata.state.assignment]
+  if(any(c("Longitude","Latitude") %nin% colnames(spdata))){
+    stop("Longitude and Latitude columns not found in species data, check column names")
+  }
 
-      #subset to just target state
-      spdata.target.state <- spdata[spdata.state.assignment %in% region,]
+  ## Convert spdata to a sf object
+  spdata.sf <- sf::st_as_sf(spdata,
+                            coords = c("Longitude", "Latitude"),
+                            crs = 4326)
 
-      return(spdata.target.state)
-    }
+  ## Get state polygon data and make it sf
+
+  AUS.shapes <- rnaturalearth::ne_states("australia",
+                                         returnclass = "sf")
+
+  ## Assign state to each record
+
+  spdata.state.assignment <- unlist(sf::st_intersects(spdata.sf,
+                                                      AUS.shapes))
+
+  spdata.state.assignment <- AUS.shapes$name[spdata.state.assignment]
+
+  ## Subset to just target state
+
+  spdata.target.state <- spdata[spdata.state.assignment %in% region,]
+
+  return(spdata.target.state)
+
+}
