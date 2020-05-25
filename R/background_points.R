@@ -1,20 +1,36 @@
+#' Generate background points
+#'
+#' @param species Charaacter vector of species name
+#' @param spp_data List of species data
+#' @param env_data Rasters tack
+#' @param guild Character vector
+#' @param region Character vector
+#' @param background_group Character vector. One of: vertebrates, plants, insects
+#'
+#' @return
+#' @export
+#'
+#' @examples
+
 background_points <- function(species,
                               spp_data,
                               env_data,
                               guild,
-                              region){
+                              region,
+                              background_group){
 
   ## Read in full target group background data
-  #TODO filepath and/or make it a package data object
 
-  all_background <- readRDS("bg.rds")
+  if(background_group == "vertebrates"){
+    all_background <- background_vertebrates
+  }
 
   ## Filter background points
 
   filter_bg <- all_background[all_background$Guild == guild &
                                 all_background$Species != species, ]
 
-  #TODO Add region filter here
+  ##Filter by region
 
   filter_bg <- mask_species_data(filter_bg,
                                  region)
