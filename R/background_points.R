@@ -27,10 +27,9 @@ background_points <- function(species,
 
   ## Filter background points
 
-  filter_bg <- all_background[all_background$Guild == guild &
-                                all_background$Species != species, ]
+  filter_bg <- all_background[all_background$Guild == guild, ]
 
-  ##Filter by region
+  ## Filter by region
 
   filter_bg <- mask_species_data(filter_bg,
                                  region)
