@@ -27,10 +27,9 @@ background_points <- function(species,
 
   ## Filter background points
 
-  filter_bg <- all_background[all_background$Guild == guild &
-                                all_background$Species != species, ]
+  filter_bg <- all_background[all_background$Guild == guild, ]
 
-  ##Filter by region
+  ## Filter by region
 
   filter_bg <- mask_species_data(filter_bg,
                                  region)
@@ -53,7 +52,7 @@ background_points <- function(species,
                            1000,
                            replace = FALSE), ]
 
-    bg$value <- 0
+    bg$Value <- 0
 
   } else {
 
@@ -81,9 +80,11 @@ background_points <- function(species,
 
   ## Combine spp and bg dfs
 
-  spp_data$processed.data$Value <- 1
+  spp_data$data$Value <- 1
 
-  spp_data$processed.data <- rbind(spp_data$processed.data,
+  spp_data$data$Guild <- guild
+
+  spp_data$data <- rbind(spp_data$data,
                                    bg)
 
   return(spp_data)
