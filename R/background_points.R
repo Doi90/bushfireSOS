@@ -52,7 +52,7 @@ background_points <- function(species,
                            1000,
                            replace = FALSE), ]
 
-    bg$value <- 0
+    bg$Value <- 0
 
   } else {
 
@@ -80,9 +80,11 @@ background_points <- function(species,
 
   ## Combine spp and bg dfs
 
-  spp_data$processed.data$Value <- 1
+  spp_data$data$Value <- 1
 
-  spp_data$processed.data <- rbind(spp_data$processed.data,
+  spp_data$data$Guild <- guild
+
+  spp_data$data <- rbind(spp_data$data,
                                    bg)
 
   return(spp_data)
