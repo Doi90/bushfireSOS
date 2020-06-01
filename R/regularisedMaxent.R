@@ -1,61 +1,68 @@
 #' Tune Maxent Regularisation Multiplier
 #'
 #' @param data
-#' @param kf
-#' @param filepath
+#' @param kf Integer. Number of cross-validation folds
 #'
 #' @return
 #' @export
 #'
 #' @examples
-
-regularisedMaxent <- function(data,
-                              kf = 3,
-                              filepath){
+regularisedMaxent <- function(data, kf = 4, parallel = TRUE, ncors = 4){
 
   ms <- c(0.25, 0.5, 1, 2, 3, 4)
-
-  folds <- caret::createFolds(data$occ,
-                              k = kf)
-
+  folds <- caret::createFolds(data$value, k = kf)
+  presences <- data$value
+  covariates <- data[, names(data)!="value"]
   n <- 0
-
   AUCs <- c()
-
+  kf <- ifelse(sum(data$value) <= kf, sum(data$value), kf)
   for(m in ms){
-
     n <- n + 1
-
     modAUC <- c()
 
-    for(k in seq_len(kf)){
+    if(parallel){
+      require(foreach)
+      # make a parallel computing cluster
+      cluster <- snow::makeCluster(ncors, type="SOCK")
+      doSNOW::registerDoSNOW(cluster)
+      modAUC <- foreach::foreach(k = seq_len(kf), .packages=c('maxnet', 'precrec')) %dopar% {
 
-      trainSet <- unlist(folds[-k])
+        trainSet <- unlist(folds[-k])
+        testSet <- unlist(folds[k])
+        mxnet <- maxnet::maxnet(p = presences[trainSet],
+                                data = covariates[trainSet, ],
+                                regmult = m, # regularisation multiplier
+                                maxnet::maxnet.formula(p = presences[trainSet],
+                                                       data = covariates[trainSet, ],
+                                                       classes = "default"))
 
-      testSet <- unlist(folds[k])
+        prediction <- as.vector(predict(mxnet, covariates[testSet, ], type = "cloglog"))
+        modAUC <- precrec::auc(precrec::evalmod(scores = prediction,
+                                                labels = presences[testSet]))[1,4]
 
-      me1 <- dismo::maxent(x = data[trainSet, 2:ncol(data)],
-                           p = data$occ[trainSet],
-                           path = filepath,
-                           args = c(paste0("betamultiplier=", m)))
+      }
+      snow::stopCluster(cluster)
+      foreach::registerDoSEQ()
+    } else{
+      for(k in seq_len(kf)){
+        trainSet <- unlist(folds[-k])
+        testSet <- unlist(folds[k])
+        mxnet <- maxnet::maxnet(p = presences[trainSet],
+                                data = covariates[trainSet, ],
+                                regmult = m, # regularisation multiplier
+                                maxnet::maxnet.formula(p = presences[trainSet],
+                                                       data = covariates[trainSet, ],
+                                                       classes = "default"))
 
-      modpre <- prediction(predict(me1,
-                                   data[testSet, 2:ncol(data)]),
-                           data$occ[testSet])
-
-      modperf <- performance(modpre,
-                             "auc")
-
-      modAUC[k] <- as.numeric(modperf@y.values)
-
+        prediction <- as.vector(predict(mxnet, covariates[testSet, ], type = "cloglog"))
+        modAUC[k] <- precrec::auc(precrec::evalmod(scores = prediction,
+                                                   labels = presences[testSet]))[1,4]
+      }
     }
 
-    AUCs[n] <- mean(modAUC)
-
+    AUCs[n] <- mean(unlist(modAUC))
   }
 
   bestModel <- ms[which.max(AUCs)]
-
   return(bestModel)
-
 }
