@@ -1,28 +1,17 @@
 #' Fit a Presence-Absence Species Distribution Model
 #'
 #' @param spp_data
-#' @param env_data
 #'
 #' @return
 #' @export
 #'
 #' @examples
 
-fit_pres_abs_model <- function(spp_data,
-                               env_data){
-
-  ## Extract raster data at point locations
-
-  env_values <- raster::extract(env_data,
-                                spp_data[ , c("lon", "lat")])
-
-  spp_data <- rbind(spp_data,
-                    env_values)
+fit_pres_abs_model <- function(spp_data){
 
   ## Calculations for tree complexity
 
-  nPres <- sum(spp_data$value,
-               na.rm = TRUE)
+  nPres <- sum(spp_data$value, na.rm = TRUE)
 
   ## Fit BRT
 
