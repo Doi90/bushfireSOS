@@ -16,7 +16,7 @@ fit_pres_abs_model <- function(spp_data){
   ## Fit BRT
 
   brt <- dismo::gbm.step(data = spp_data,
-                         gbm.x = 5:ncol(spp_data), # column indices for covariates
+                         gbm.x = 14:ncol(spp_data), # column indices for covariates
                          gbm.y = "value", # column name for response
                          family = "bernoulli",
                          tree.complexity = ifelse(nPres < 50, 1, 5),
