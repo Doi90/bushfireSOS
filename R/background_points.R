@@ -17,7 +17,8 @@ background_points <- function(species,
                               env_data,
                               guild,
                               region,
-                              background_group){
+                              background_group,
+                              sample_min){
 
   ## Region formatting
 
@@ -59,10 +60,13 @@ background_points <- function(species,
   ## Sample from remaining background points
   ##TODO Set number of samples based on number of presences?
 
-  if(nrow(filter_bg) >= 1000){
+  n_samples <- max(sample_min,
+                   length(region) * 1000)
+
+  if(nrow(filter_bg) >= n_samples){
 
     bg <- filter_bg[sample(seq_len(nrow(filter_bg)),
-                           1000,
+                           n_samples,
                            replace = FALSE), ]
 
     bg$Value <- 0
