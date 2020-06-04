@@ -19,6 +19,15 @@ background_points <- function(species,
                               region,
                               background_group){
 
+  ## Region formatting
+
+  region <- dplyr::case_when(region == "VIC" ~ "Victoria",
+                             region == "NSW" ~ "New South Wales",
+                             region == "QLD" ~ "Queensland",
+                             region == "SA" ~ "South Australia",
+                             region == "WA" ~ "Western Australia",
+                             region == "TAS" ~ "Tasmania")
+
   ## Read in full target group background data
 
   if(background_group == "vertebrates"){
