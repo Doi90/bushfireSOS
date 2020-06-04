@@ -51,6 +51,10 @@ background_points <- function(species,
 
   filter_bg <- filter_bg[filter_bg$Date >= "1970-01-01", ]
 
+  ## Remove uncertain observations
+
+  filter_bg <- filter_bg[filter_bg$Coordinate.Uncertainty.in.Metres < 10000, ]
+
 
   ## Sample from remaining background points
   ##TODO Set number of samples based on number of presences?
