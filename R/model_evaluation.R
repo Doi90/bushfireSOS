@@ -64,7 +64,7 @@ cross_validate <- function(spp_data,
                                                                        parallel = FALSE) # parallel must be FALSE here
 
                                              prediction <- predict(mxnt,
-                                                                   spp_data[testSet, 5:ncol(spp_data)],
+                                                                   spp_data[testSet, 14:ncol(spp_data)],
                                                                    type = "cloglog")
 
                                            } else {
@@ -74,7 +74,7 @@ cross_validate <- function(spp_data,
                                              brt <- fit_pres_abs_model(spp_data[trainSet, ])
 
                                              prediction <- predict(brt,
-                                                                   spp_data[testSet , 5:ncol(spp_data)],
+                                                                   spp_data[testSet , 14:ncol(spp_data)],
                                                                    n.trees = brt$gbm.call$best.trees, type = "response")
 
                                            }
@@ -122,7 +122,7 @@ cross_validate <- function(spp_data,
                                   ncors = ncors)
 
         prediction <- predict(mxnt,
-                              spp_data[testSet, 5:ncol(spp_data)],
+                              spp_data[testSet, 14:ncol(spp_data)],
                               type = "cloglog")
 
       } else {
@@ -132,7 +132,7 @@ cross_validate <- function(spp_data,
         brt <- fit_pres_abs_model(spp_data[trainSet, ])
 
         prediction <- predict(brt,
-                              spp_data[testSet , 5:ncol(spp_data)],
+                              spp_data[testSet , 14:ncol(spp_data)],
                               n.trees = brt$gbm.call$best.trees,
                               type = "response")
 

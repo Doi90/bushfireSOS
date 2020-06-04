@@ -28,7 +28,7 @@ fit_pres_bg_model <- function(spp_data,
 
     val <- which(names(spp_data) == "value")
 
-    bestRegMult <- regularisedMaxent(data = spp_data[ , c(val, 5:ncol(spp_data))],
+    bestRegMult <- regularisedMaxent(data = spp_data[ , c(val, 14:ncol(spp_data))],
                                      kf = k,
                                      parallel = parallel,
                                      ncors = ncors)
@@ -42,10 +42,10 @@ fit_pres_bg_model <- function(spp_data,
   ## Fit MaxEnt model
 
   best_mod <- maxnet::maxnet(p = spp_data$value,
-                             data = spp_data[ , 5:ncol(spp_data)],
+                             data = spp_data[ , 14:ncol(spp_data)],
                              regmult = bestRegMult,
                              maxnet::maxnet.formula(p = spp_data$value,
-                                                    data = spp_data[ , 5:ncol(spp_data)],
+                                                    data = spp_data[ , 14:ncol(spp_data)],
                                                     classes = "default"))
 
   return(best_mod)
