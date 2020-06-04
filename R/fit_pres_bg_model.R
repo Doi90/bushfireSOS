@@ -15,6 +15,9 @@ fit_pres_bg_model <- function(spp_data,
                               parallel = TRUE,
                               ncors = 4){
 
+  ncors <- min(ncors,
+               detectCores() - 1)
+
   ## Estimate the tuned regularization parameter
 
   if(tuneParam){

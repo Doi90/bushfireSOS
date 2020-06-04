@@ -19,6 +19,9 @@ cross_validate <- function(spp_data,
 
   require(foreach)
 
+  ncors <- min(ncors,
+               detectCores() - 1)
+
   ## Check if the arguments are correct
 
   type <- match.arg(type)

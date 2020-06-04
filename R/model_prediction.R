@@ -18,6 +18,9 @@ model_prediction <- function(model,
                              parallel = TRUE,
                              ncors = 4){
 
+  ncors <- min(ncors,
+               detectCores() - 1)
+
   ## Perform prediction over entire region
 
   modtype <- class(model)[1]
