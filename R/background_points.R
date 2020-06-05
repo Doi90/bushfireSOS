@@ -17,6 +17,7 @@ background_points <- function(species,
                               guild,
                               region,
                               background_group,
+                              bias_layer,
                               sample_min){
 
   ## Region formatting
@@ -74,7 +75,7 @@ background_points <- function(species,
 
     ## Generate background points
 
-    bg_dismo <- dismo::randomPoints(raster::raster("bushfireResponse_data/spatial_layers/travel_time_to_cities_12.tif"),
+    bg_dismo <- dismo::randomPoints(bias_layer,
                                     10000,
                                     prob = TRUE)
 
