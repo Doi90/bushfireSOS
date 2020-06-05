@@ -1,6 +1,7 @@
-#' Title
+#' Mask environmental data
 #'
 #' @param region
+#' @param env_data
 #'
 #' @return
 #' @export
