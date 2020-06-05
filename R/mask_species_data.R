@@ -38,14 +38,18 @@ mask_species_data <- function(spdata, region){
   }
 
   ## Convert spdata to a sf object
+
   spdata.sf <- sf::st_as_sf(spdata,
                             coords = c("Longitude", "Latitude"),
-                            crs = 4326)
+                            crs = 3577)
 
   ## Get state polygon data and make it sf
 
   AUS.shapes <- rnaturalearth::ne_states("australia",
                                          returnclass = "sf")
+
+  AUS.shapes <- sf::st_transform(AUS.shapes,
+                                 crs = 3577)
 
   ## Assign state to each record
 
