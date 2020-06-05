@@ -75,7 +75,8 @@ background_points <- function(species,
     ## Generate background points
 
     bg_dismo <- dismo::randomPoints(raster::raster("bushfireResponse_data/spatial_layers/travel_time_to_cities_12.tif"),
-                                    10000)
+                                    10000,
+                                    prob = TRUE)
 
     bg <- data.frame(ID = NA,
                      Origin = NA,
