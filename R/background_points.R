@@ -14,7 +14,6 @@
 
 background_points <- function(species,
                               spp_data,
-                              env_data,
                               guild,
                               region,
                               background_group,
@@ -75,7 +74,7 @@ background_points <- function(species,
 
     ## Generate background points
 
-    bg_dismo <- dismo::randomPoints(env_data[[1]],
+    bg_dismo <- dismo::randomPoints(raster::raster("bushfireResponse_data/spatial_layers/travel_time_to_cities_12.tif"),
                                     10000)
 
     bg <- data.frame(ID = NA,
@@ -102,7 +101,7 @@ background_points <- function(species,
   spp_data$data$Guild <- guild
 
   spp_data$data <- rbind(spp_data$data,
-                                   bg)
+                         bg)
 
   return(spp_data)
 
