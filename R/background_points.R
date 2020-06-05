@@ -14,10 +14,19 @@
 
 background_points <- function(species,
                               spp_data,
-                              env_data,
                               guild,
                               region,
-                              background_group){
+                              background_group,
+                              sample_min){
+
+  ## Region formatting
+
+  region <- dplyr::case_when(region == "VIC" ~ "Victoria",
+                             region == "NSW" ~ "New South Wales",
+                             region == "QLD" ~ "Queensland",
+                             region == "SA" ~ "South Australia",
+                             region == "WA" ~ "Western Australia",
+                             region == "TAS" ~ "Tasmania")
 
   ## Read in full target group background data
 
@@ -42,14 +51,21 @@ background_points <- function(species,
 
   filter_bg <- filter_bg[filter_bg$Date >= "1970-01-01", ]
 
+  ## Remove uncertain observations
+
+  filter_bg <- filter_bg[filter_bg$Coordinate.Uncertainty.in.Metres < 10000, ]
+
 
   ## Sample from remaining background points
   ##TODO Set number of samples based on number of presences?
 
-  if(nrow(filter_bg) >= 1000){
+  n_samples <- max(sample_min,
+                   length(region) * 1000)
+
+  if(nrow(filter_bg) >= n_samples){
 
     bg <- filter_bg[sample(seq_len(nrow(filter_bg)),
-                           1000,
+                           n_samples,
                            replace = FALSE), ]
 
     bg$Value <- 0
@@ -58,8 +74,9 @@ background_points <- function(species,
 
     ## Generate background points
 
-    bg_dismo <- dismo::randomPoints(env_data[[1]],
-                                    10000)
+    bg_dismo <- dismo::randomPoints(raster::raster("bushfireResponse_data/spatial_layers/travel_time_to_cities_12.tif"),
+                                    10000,
+                                    prob = TRUE)
 
     bg <- data.frame(ID = NA,
                      Origin = NA,
@@ -85,7 +102,7 @@ background_points <- function(species,
   spp_data$data$Guild <- guild
 
   spp_data$data <- rbind(spp_data$data,
-                                   bg)
+                         bg)
 
   return(spp_data)
 
