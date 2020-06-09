@@ -33,10 +33,9 @@ mask_data <- function(env_data,
 
   AUS.shapes <- AUS.shapes[AUS.shapes$name %in% region, ]
 
-  system.time(
-    env_data <- raster::mask(env_data,
+  env_data <- raster::mask(env_data,
                              mask = AUS.shapes)
-  )
+
 
 
   return(env_data)
