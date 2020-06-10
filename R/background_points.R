@@ -65,9 +65,7 @@ background_points <- function(species,
 
   if(nrow(filter_bg) >= n_samples){
 
-    bg <- filter_bg[sample(seq_len(nrow(filter_bg)),
-                           n_samples,
-                           replace = FALSE), ]
+    bg <- filter_bg
 
     bg$Value <- 0
 
