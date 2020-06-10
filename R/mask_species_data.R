@@ -20,6 +20,14 @@ mask_species_data <- function(spdata, region){
     stop("input not in expected classes")
   }
 
+  ## Don't forget the ACT
+
+  if("NSW" %in% region){
+
+    region <- c(region, "ACT")
+
+  }
+
   ## Convert region character
 
   region <- gsub("VIC", "Victoria", region)
