@@ -18,19 +18,19 @@ regularisedMaxent <- function(data,
 
   ms <- c(0.25, 0.5, 1, 2, 3, 4)
 
-  folds <- caret::createFolds(data$value,
+  folds <- caret::createFolds(data$Value,
                               k = kf)
 
-  presences <- data$value
+  presences <- data$Value
 
-  covariates <- data[ , names(data) != "value"]
+  covariates <- data[ , names(data) != "Value"]
 
   n <- 0
 
   AUCs <- c()
 
-  kf <- ifelse(sum(data$value) <= kf,
-               sum(data$value),
+  kf <- ifelse(sum(data$Value) <= kf,
+               sum(data$Value),
                kf)
 
   for(m in ms){
