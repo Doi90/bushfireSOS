@@ -14,7 +14,7 @@ load_env_data <- function(stack_file,
 
   ## Load file
 
-  stack <- raster::stack(file)
+  stack <- raster::stack(stack_file)
 
   ## Mask to region
 
