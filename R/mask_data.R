@@ -12,6 +12,14 @@
 mask_data <- function(env_data,
                       region){
 
+  ## Don't forget the ACT
+
+  if("NSW" %in% region){
+
+    region <- c(region, "ACT")
+
+  }
+
   ## Convert region character
 
   region <- gsub("VIC", "Victoria", region)
