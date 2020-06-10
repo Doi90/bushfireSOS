@@ -22,6 +22,8 @@ cross_validate <- function(spp_data,
   ncors <- min(ncors,
                detectCores() - 1)
 
+  df <- spp_data$data
+
   ## Check if the arguments are correct
 
   type <- match.arg(type)
@@ -32,7 +34,7 @@ cross_validate <- function(spp_data,
 
   ## Cross-validation folds
 
-  folds <- caret::createFolds(spp_data$value,
+  folds <- caret::createFolds(df$Value,
                               k)
   if(parallel){
 
@@ -59,22 +61,22 @@ cross_validate <- function(spp_data,
 
                                              ## Fit a maxent
 
-                                             mxnt <- fit_pres_bg_model(spp_data[trainSet, ],
+                                             mxnt <- fit_pres_bg_model(df[trainSet, ],
                                                                        tuneParam = TRUE,
                                                                        parallel = FALSE) # parallel must be FALSE here
 
                                              prediction <- predict(mxnt,
-                                                                   spp_data[testSet, 14:ncol(spp_data)],
+                                                                   df[testSet, 14:ncol(df)],
                                                                    type = "cloglog")
 
                                            } else {
 
                                              ## fit a brt
 
-                                             brt <- fit_pres_abs_model(spp_data[trainSet, ])
+                                             brt <- fit_pres_abs_model(df[trainSet, ])
 
                                              prediction <- predict(brt,
-                                                                   spp_data[testSet , 14:ncol(spp_data)],
+                                                                   df[testSet , 14:ncol(df)],
                                                                    n.trees = brt$gbm.call$best.trees, type = "response")
 
                                            }
@@ -82,9 +84,9 @@ cross_validate <- function(spp_data,
                                            ## Calculate the AUC
 
                                            aucs <- precrec::auc(precrec::evalmod(scores = prediction,
-                                                                                 labels = spp_data$value[testSet]))[1, 4]
+                                                                                 labels = df$Value[testSet]))[1, 4]
 
-                                           auprg <- prg::calc_auprg(prg::create_prg_curve(labels = spp_data$value,
+                                           auprg <- prg::calc_auprg(prg::create_prg_curve(labels = df$Value,
                                                                                           pos_scores = prediction))
 
                                            outauc <- data.frame(roc = aucs,
@@ -116,23 +118,23 @@ cross_validate <- function(spp_data,
 
         ## fit a maxent
 
-        mxnt <- fit_pres_bg_model(spp_data[trainSet, ],
+        mxnt <- fit_pres_bg_model(df[trainSet, ],
                                   tuneParam = TRUE,
                                   parallel = FALSE, # can be TRUE
                                   ncors = ncors)
 
         prediction <- predict(mxnt,
-                              spp_data[testSet, 14:ncol(spp_data)],
+                              df[testSet, 14:ncol(df)],
                               type = "cloglog")
 
       } else {
 
         # fit a brt
 
-        brt <- fit_pres_abs_model(spp_data[trainSet, ])
+        brt <- fit_pres_abs_model(df[trainSet, ])
 
         prediction <- predict(brt,
-                              spp_data[testSet , 14:ncol(spp_data)],
+                              df[testSet , 14:ncol(df)],
                               n.trees = brt$gbm.call$best.trees,
                               type = "response")
 
@@ -141,9 +143,9 @@ cross_validate <- function(spp_data,
       ## Calculate the AUC
 
       aucboth$roc[ks] <- precrec::auc(precrec::evalmod(scores = prediction,
-                                                       labels = spp_data$value[testSet]))[1,4]
+                                                       labels = df$Value[testSet]))[1, 4]
 
-      aucboth$prg[ks] <- prg::calc_auprg(prg::create_prg_curve(labels = spp_data$value,
+      aucboth$prg[ks] <- prg::calc_auprg(prg::create_prg_curve(labels = df$Value,
                                                                pos_scores = prediction))
 
     }

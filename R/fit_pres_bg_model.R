@@ -18,17 +18,19 @@ fit_pres_bg_model <- function(spp_data,
   ncors <- min(ncors,
                detectCores() - 1)
 
+  df <- spp_data$data
+
   ## Estimate the tuned regularization parameter
 
   if(tuneParam){
 
-    k <- ifelse(sum(spp_data$value) <= k,
-                sum(spp_data$value),
+    k <- ifelse(sum(df$Value) <= k,
+                sum(df$Value),
                 k)
 
-    val <- which(names(spp_data) == "value")
+    val <- which(names(df) == "Value")
 
-    bestRegMult <- regularisedMaxent(data = spp_data[ , c(val, 14:ncol(spp_data))],
+    bestRegMult <- regularisedMaxent(data = df[ , c(val, 14:ncol(df))],
                                      kf = k,
                                      parallel = parallel,
                                      ncors = ncors)
@@ -41,11 +43,11 @@ fit_pres_bg_model <- function(spp_data,
 
   ## Fit MaxEnt model
 
-  best_mod <- maxnet::maxnet(p = spp_data$value,
-                             data = spp_data[ , 14:ncol(spp_data)],
+  best_mod <- maxnet::maxnet(p = df$Value,
+                             data = df[ , 14:ncol(df)],
                              regmult = bestRegMult,
-                             maxnet::maxnet.formula(p = spp_data$value,
-                                                    data = spp_data[ , 14:ncol(spp_data)],
+                             maxnet::maxnet.formula(p = df$Value,
+                                                    data = df[ , 14:ncol(df)],
                                                     classes = "default"))
 
   return(best_mod)
