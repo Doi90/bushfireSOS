@@ -3,6 +3,8 @@
 #' @param model
 #' @param env_data
 #' @param mask
+#' @param parallel
+#' @param ncors
 #'
 #' @return
 #' @export
@@ -12,19 +14,48 @@
 
 model_prediction <- function(model,
                              env_data,
-                             mask){
+                             mask,
+                             parallel = TRUE,
+                             ncors = 4){
+
+  ncors <- min(ncors,
+               detectCores() - 1)
 
   ## Perform prediction over entire region
 
-  preds <- predict(model,
-                   env_data)
+  modtype <- class(model)[1]
+
+  outtype <- ifelse(modtype == "maxnet",
+                    "cloglog",
+                    "response")
+
+  if(parallel){
+
+    raster::beginCluster(n = ncors,
+                         type = "SOCK")
+
+    preds <- raster::clusterR(env_data,
+                              raster::predict,
+                              args = list(model = model,
+                                          type = outtype))
+
+    raster::endCluster()
+
+  } else {
+
+    preds <- raster::predict(model,
+                             env_data,
+                             type = outtype)
+
+  }
 
   ## Mask prediction to burnt areas
 
-  burnt_preds <- mask(preds,
-                      mask)
+  burnt_preds <- raster::crop(preds, mask)
 
-  return(stack(preds,
-               burnt_preds))
+  burnt_preds <- raster::mask(preds, mask)
+
+  return(raster::stack(preds,
+                       burnt_preds))
 
 }
