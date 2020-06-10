@@ -49,7 +49,11 @@ mask_species_data <- function(spdata, region){
 
   spdata.sf <- sf::st_as_sf(spdata,
                             coords = c("Longitude", "Latitude"),
-                            crs = 3577)
+                            crs = 4326)
+
+  #reproject to Australian Albers
+  spdata.sf <- sf::st_transform(spdata.sf,
+                                crs = 3577)
 
   ## Get state polygon data and make it sf
 
