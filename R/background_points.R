@@ -75,7 +75,7 @@ background_points <- function(species,
 
     ## Generate background points
 
-    bg_dismo <- dismo::randomPoints(bias_layer,
+    bg_dismo <- dismo::randomPoints(raster::raster(bias_layer),
                                     10000,
                                     prob = TRUE)
 
@@ -95,6 +95,11 @@ background_points <- function(species,
                      stringsAsFactors = FALSE)
 
   }
+
+  ## Filter background points by pixel
+
+  bg <- pixel_filtering(data = bg,
+                        raster = raster::raster(bias_layer))
 
   ## Combine spp and bg dfs
 
