@@ -17,7 +17,7 @@ env_data_extraction <- function(spp_data,
   spp_data$data <- cbind(spp_data$data,
                          env_extract)
 
-  spp_data$data <- spp_data$data[complete.cases(spp_data$data[, 14:ncol(spp_data$data)])]
+  spp_data$data <- spp_data$data[complete.cases(spp_data$data[, 14:ncol(spp_data$data)]), ]
 
   return(spp_data)
 
