@@ -118,7 +118,7 @@ cross_validate <- function(spp_data,
 
         ## fit a maxent
 
-        mxnt <- fit_pres_bg_model(df[trainSet, ],
+        mxnt <- fit_pres_bg_model(list(data = df[trainSet, ]),
                                   tuneParam = TRUE,
                                   parallel = FALSE, # can be TRUE
                                   ncors = ncors)
@@ -131,7 +131,7 @@ cross_validate <- function(spp_data,
 
         # fit a brt
 
-        brt <- fit_pres_abs_model(df[trainSet, ])
+        brt <- fit_pres_abs_model(list(data = df[trainSet, ]))
 
         prediction <- predict(brt,
                               df[testSet , 14:ncol(df)],
