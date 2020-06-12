@@ -34,15 +34,17 @@ mask_data <- function(env_data,
   ## Get state polygon data and make it sf
 
   AUS.shapes <- rnaturalearth::ne_states("australia",
-                                         returnclass = "sf")
+                                         returnclass = "sp")
 
-  AUS.shapes <- sf::st_transform(AUS.shapes,
-                                 crs = 3577)
+  AUS.shapes <- sp::spTransform(AUS.shapes,
+                                CRSobj = raster::crs(env_data))
 
   AUS.shapes <- AUS.shapes[AUS.shapes$name %in% region, ]
 
   env_data <- raster::mask(env_data,
-                           mask = AUS.shapes)
+                             mask = AUS.shapes)
+
+
 
   return(env_data)
 
