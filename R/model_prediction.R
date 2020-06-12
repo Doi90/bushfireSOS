@@ -43,8 +43,8 @@ model_prediction <- function(model,
 
   } else {
 
-    preds <- raster::predict(model,
-                             env_data,
+    preds <- raster::predict(env_data,
+                             model,
                              type = outtype)
 
   }
