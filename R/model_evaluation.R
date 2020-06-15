@@ -20,7 +20,7 @@ cross_validate <- function(spp_data,
   require(foreach)
 
   ncors <- min(ncors,
-               detectCores() - 1)
+               parallel::detectCores() - 1)
 
   df <- spp_data$data
 

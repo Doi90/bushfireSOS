@@ -14,7 +14,7 @@ regularisedMaxent <- function(data,
                               ncors = 4){
 
   ncors <- min(ncors,
-               detectCores() - 1)
+               parallel::detectCores() - 1)
 
   ms <- c(0.25, 0.5, 1, 2, 3, 4)
 

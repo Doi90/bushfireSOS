@@ -16,7 +16,7 @@ fit_pres_bg_model <- function(spp_data,
                               ncors = 4){
 
   ncors <- min(ncors,
-               detectCores() - 1)
+               parallel::detectCores() - 1)
 
   df <- spp_data$data
 
