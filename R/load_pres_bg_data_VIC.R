@@ -139,10 +139,14 @@ load_pres_bg_data_VIC <- function(file,
                              NA)
 
   ##reproject data from GDA94 to WGS84
+
   sp.sf <- sf::st_as_sf(df,
                         coords = (4:5),
                         crs = 4283)
-  sp.sf <- sf::st_transform(sp.sf, 4326)
+
+  sp.sf <- sf::st_transform(sp.sf,
+                            3577)
+
   df[,4:5] <- sf::st_coordinates(sp.sf)
 
 
