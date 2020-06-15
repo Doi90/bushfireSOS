@@ -106,27 +106,27 @@ load_pres_bg_data_QLD <- function(species,
     stop("Not run: no data with legitimate coordinates found")
   }
 
-  ## Clean records using coord cleaner
-
-  df <- CoordinateCleaner::clean_coordinates(df,
-                                             lon = "Longitude",
-                                             lat = "Latitude",
-                                             species = "Species",
-                                             tests = c("capitals",
-                                                       "centroids",
-                                                       "equal",
-                                                       "gbif",
-                                                       "institutions",
-                                                       "seas",
-                                                       "zeros"),
-                                             #skip urban test - keeps giving proj4string errors, will look into later
-                                             # urban_ref = as_Spatial(read_sf("Data/GIS/ne_50m_urban_areas/ne_50m_urban_areas.shp")),
-                                             seas_ref =  NULL, #as_Spatial(read_sf("Data/GIS/ne_50m_land/ne_50m_land.shp")),
-
-                                             #ignore outliers for now
-                                             # outliers_method = "distance",
-                                             # outliers_td = 1500, #outlier bit probably needs tweaking, its curently set to be very conservative
-                                             value = "clean")
+  # ## Clean records using coord cleaner
+  #
+  # df <- CoordinateCleaner::clean_coordinates(df,
+  #                                            lon = "Longitude",
+  #                                            lat = "Latitude",
+  #                                            species = "Species",
+  #                                            tests = c("capitals",
+  #                                                      "centroids",
+  #                                                      "equal",
+  #                                                      "gbif",
+  #                                                      "institutions",
+  #                                                      "seas",
+  #                                                      "zeros"),
+  #                                            #skip urban test - keeps giving proj4string errors, will look into later
+  #                                            # urban_ref = as_Spatial(read_sf("Data/GIS/ne_50m_urban_areas/ne_50m_urban_areas.shp")),
+  #                                            seas_ref =  NULL, #as_Spatial(read_sf("Data/GIS/ne_50m_land/ne_50m_land.shp")),
+  #
+  #                                            #ignore outliers for now
+  #                                            # outliers_method = "distance",
+  #                                            # outliers_td = 1500, #outlier bit probably needs tweaking, its curently set to be very conservative
+  #                                            value = "clean")
 
   ## Check if duplicate long or lat - could be signal of rounding
 
