@@ -55,6 +55,10 @@ mask_species_data <- function(spdata, region){
   spdata.sf <- sf::st_transform(spdata.sf,
                                 crs = 3577)
 
+  #override original long/lat coordinates
+  #note that this makes column names incorrect
+  spdata[,c("Longitude", "Latitude")] <- sf::st_coordinates(spdata.sf)
+
   ## Get state polygon data and make it sf
 
   AUS.shapes <- rnaturalearth::ne_states("australia",
