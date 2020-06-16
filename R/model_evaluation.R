@@ -14,10 +14,13 @@
 cross_validate <- function(spp_data,
                            type = c("po", "pa"),
                            k = 5,
+                           features = c("default", "lqp", "lq", "l"),
                            parallel = TRUE,
                            ncors = 4){
 
   require(foreach)
+
+  features <- match.arg(features)
 
   ncors <- min(ncors,
                parallel::detectCores() - 1)
@@ -63,6 +66,7 @@ cross_validate <- function(spp_data,
 
                                              mxnt <- fit_pres_bg_model(df[trainSet, ],
                                                                        tuneParam = TRUE,
+                                                                       features = features,
                                                                        parallel = FALSE) # parallel must be FALSE here
 
                                              prediction <- predict(mxnt,
@@ -121,7 +125,8 @@ cross_validate <- function(spp_data,
         mxnt <- fit_pres_bg_model(list(data = df[trainSet, ]),
                                   tuneParam = TRUE,
                                   parallel = FALSE, # can be TRUE
-                                  ncors = ncors)
+                                  ncors = ncors,
+                                  features = features)
 
         prediction <- predict(mxnt,
                               df[testSet, 14:ncol(df)],
