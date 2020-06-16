@@ -90,11 +90,11 @@ cross_validate <- function(spp_data,
                                            aucs <- precrec::auc(precrec::evalmod(scores = prediction,
                                                                                  labels = df$Value[testSet]))[1, 4]
 
-                                           auprg <- prg::calc_auprg(prg::create_prg_curve(labels = df$Value,
-                                                                                          pos_scores = prediction))
+                                           # auprg <- prg::calc_auprg(prg::create_prg_curve(labels = df$Value,
+                                           #                                                pos_scores = prediction))
 
-                                           outauc <- data.frame(roc = aucs,
-                                                                prg = auprg)
+                                           outauc <- data.frame(roc = aucs)#,
+                                                                #prg = auprg)
 
                                          }
 
@@ -109,8 +109,8 @@ cross_validate <- function(spp_data,
 
     # pp <- vector(mode = "numeric", length = k)
 
-    aucboth <- data.frame(roc = rep(0, k),
-                          prg = 0)
+    aucboth <- data.frame(roc = rep(0, k))#,
+                          #prg = 0)
 
     for(ks in seq_len(k)){
 
@@ -150,8 +150,8 @@ cross_validate <- function(spp_data,
       aucboth$roc[ks] <- precrec::auc(precrec::evalmod(scores = prediction,
                                                        labels = df$Value[testSet]))[1, 4]
 
-      aucboth$prg[ks] <- prg::calc_auprg(prg::create_prg_curve(labels = df$Value,
-                                                               pos_scores = prediction))
+      # aucboth$prg[ks] <- prg::calc_auprg(prg::create_prg_curve(labels = df$Value,
+      #                                                          pos_scores = prediction))
 
     }
   }
@@ -162,11 +162,11 @@ cross_validate <- function(spp_data,
               round(mean(aucboth$roc), 4),
               round(sd(aucboth$roc) / sqrt(k), 4)))
 
-  cat(sprintf("AUC-PRG score: %s ; SE = %s \n",
-              round(mean(aucboth$prg), 4),
-              round(sd(aucboth$prg) / sqrt(k), 4)))
+  # cat(sprintf("AUC-PRG score: %s ; SE = %s \n",
+  #             round(mean(aucboth$prg), 4),
+  #             round(sd(aucboth$prg) / sqrt(k), 4)))
 
-  return(c("ROC" = round(mean(aucboth$roc), 4),
-           "PRG" = round(mean(aucboth$prg), 4)))
+  return(c("ROC" = round(mean(aucboth$roc), 4)))#,
+           # "PRG" = round(mean(aucboth$prg), 4)))
 
 }
