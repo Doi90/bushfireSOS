@@ -101,6 +101,9 @@ background_points <- function(species,
 
   ## Filter presence points by pixel
 
+  spp_data$data <- mask_species_data(spp_data$data,
+                                     region)
+
   spp_data$data <- pixel_filtering(data = spp_data$data,
                                    raster = raster::raster(bias_layer))
 
