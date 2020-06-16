@@ -108,8 +108,8 @@ load_pres_bg_data <- function(species,
 
   #then we remove data from known collections that consistently generalise their coordinates (also because we have the original data)
   occ_ala$data <- occ_ala$data[occ_ala$data$dataResourceName %nin% c("OEH Atlas of NSW Wildlife",
-                                                                     "WildNet - Queensland Wildlife Data",
-                                                                     "Victorian Biodiversity Atlas"),]
+                                                      "WildNet - Queensland Wildlife Data",
+                                                      "Victorian Biodiversity Atlas"),]
   occ_spocc$gbif$data[[1]] <- occ_spocc$gbif$data[[1]][occ_spocc$gbif$data[[1]]$collectionCode != "BioNet Atlas of NSW Wildlife",]#VBA and WildNet are not identifiable in GBIF, this is the best we can do, after a quick check this seems ok (ie remaining records at least look ok)
 
 
@@ -294,23 +294,20 @@ load_pres_bg_data <- function(species,
   if(nrow(merged_df) <= 1000){
 
     sp.sf <- sf::st_as_sf(merged_df,
-                          coords = (4:5),
-                          crs = sp::CRS("+proj=longlat +datum=WGS84"))#all ALA and GBIF coord should be in wgs84 - but this needs attention when adding more dataset in the future (and also some of ALA may be gda94 but incorrectly labelled according to Lee Belbin (I think?) - but this may be beyond our ability to fix)
-
-    sp.sf <- sf::st_transform(sp.sf,
-                              crs = 3577)
+                      coords = (4:5),
+                      crs = sp::CRS("+proj=longlat +datum=WGS84"))#all ALA and GBIF coord should be in wgs84 - but this needs attention when adding more dataset in the future (and also some of ALA may be gda94 but incorrectly labelled according to Lee Belbin (I think?) - but this may be beyond our ability to fix)
 
     sp.map <- mapview::mapview(sp.sf,
-                               layer.name = species,
-                               homebutton = FALSE)
+                      layer.name = species,
+                      homebutton = FALSE)
 
     if(save.map == TRUE){
 
       map_filename <- sprintf("%s/%s.html",
-                              map.directory,
-                              gsub(" ",
-                                   "_",
-                                   species))
+                                map.directory,
+                                gsub(" ",
+                                     "_",
+                                     species))
 
       htmlwidgets::saveWidget(sp.map@map,
                               file = map_filename)

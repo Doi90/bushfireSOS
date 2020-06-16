@@ -149,10 +149,7 @@ load_pres_bg_data_NSW <- function(species,
   sp.sf <- sf::st_as_sf(df,
                         coords = (4:5),
                         crs = 4283)
-
-  sp.sf <- sf::st_transform(sp.sf,
-                            3577)
-
+  sp.sf <- sf::st_transform(sp.sf, 4326)
   df[,4:5] <- sf::st_coordinates(sp.sf)
 
 
