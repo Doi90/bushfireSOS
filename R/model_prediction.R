@@ -19,7 +19,7 @@ model_prediction <- function(model,
                              ncors = 4){
 
   ncors <- min(ncors,
-               detectCores() - 1)
+               parallel::detectCores() - 1)
 
   ## Perform prediction over entire region
 
