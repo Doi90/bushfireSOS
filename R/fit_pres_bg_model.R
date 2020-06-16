@@ -12,11 +12,12 @@
 fit_pres_bg_model <- function(spp_data,
                               tuneParam = TRUE,
                               k = 5,
+                              features = c("default", "lqp", "lq", "l"),
                               parallel = TRUE,
                               ncors = 4){
 
-  ncors <- min(ncors,
-               detectCores() - 1)
+  features <- match.arg(features)
+  ncors <- min(ncors, parallel::detectCores() - 1)
 
   df <- spp_data$data
 
@@ -33,6 +34,7 @@ fit_pres_bg_model <- function(spp_data,
     bestRegMult <- regularisedMaxent(data = df[ , c(val, 14:ncol(df))],
                                      kf = k,
                                      parallel = parallel,
+                                     features = features,
                                      ncors = ncors)
 
   } else {
@@ -48,7 +50,7 @@ fit_pres_bg_model <- function(spp_data,
                              regmult = bestRegMult,
                              maxnet::maxnet.formula(p = df$Value,
                                                     data = df[ , 14:ncol(df)],
-                                                    classes = "default"))
+                                                    classes = features))
 
   return(best_mod)
 

@@ -10,11 +10,12 @@
 
 regularisedMaxent <- function(data,
                               kf = 4,
+                              features = c("default", "lqp", "lq", "l"),
                               parallel = TRUE,
                               ncors = 4){
 
-  ncors <- min(ncors,
-               detectCores() - 1)
+  features <- match.arg(features)
+  ncors <- min(ncors, parallel::detectCores() - 1)
 
   ms <- c(0.25, 0.5, 1, 2, 3, 4)
 
@@ -45,8 +46,7 @@ regularisedMaxent <- function(data,
 
       ## Make a parallel computing cluster
 
-      cluster <- snow::makeCluster(ncors,
-                                   type = "SOCK")
+      cluster <- snow::makeCluster(ncors, type = "SOCK")
 
       doSNOW::registerDoSNOW(cluster)
 
@@ -62,7 +62,7 @@ regularisedMaxent <- function(data,
                                                            regmult = m, # regularisation multiplier
                                                            maxnet::maxnet.formula(p = presences[trainSet],
                                                                                   data = covariates[trainSet, ],
-                                                                                  classes = "default"))
+                                                                                  classes = features))
 
                                    prediction <- as.vector(predict(mxnet,
                                                                    covariates[testSet, ],
@@ -90,7 +90,8 @@ regularisedMaxent <- function(data,
                                 regmult = m, # regularisation multiplier
                                 maxnet::maxnet.formula(p = presences[trainSet],
                                                        data = covariates[trainSet, ],
-                                                       classes = "default"))
+                                                       classes = features))
+
 
         prediction <- as.vector(predict(mxnet,
                                         covariates[testSet, ],
