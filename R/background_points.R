@@ -97,7 +97,12 @@ background_points <- function(species,
   ## Filter background points by pixel
 
   bg <- pixel_filtering(data = bg,
-                        raster = raster::raster(bias_layer))
+                                   raster = raster::raster(bias_layer))
+
+  ## Filter presence points by pixel
+
+  spp_data$data <- pixel_filtering(data = spp_data$data,
+                                   raster = raster::raster(bias_layer))
 
   ## Combine spp and bg dfs
 

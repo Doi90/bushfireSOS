@@ -154,46 +154,45 @@ load_pres_bg_data_NSW <- function(species,
 
 
 
-  ####################
-  ### Plot Records ###
-  ####################
-
-  ## Visualise those with fewer than 1k records
-  ### (can tweak this - I just think there isn't much point to manual input
-  ###  when looking at more than 1k data)
-
-  if(nrow(df) <= 1000){
-
-
-    sp.map <- mapview::mapview(sp.sf,
-                               layer.name = species,
-                               homebutton = FALSE)
-
-    if(save.map == TRUE){
-
-      map_filename <- sprintf("%s/%s.html",
-                              map.directory,
-                              gsub(" ",
-                                   "_",
-                                   species))
-
-      htmlwidgets::saveWidget(sp.map@map,
-                              file = map_filename)
-
-      cat(paste0("Map is saved to ", map_filename), "\n")
-
-    }
-
-  } else {
-
-    sp.map <- "more than 1k records, not mapped"
-
-  }
+  # ####################
+  # ### Plot Records ###
+  # ####################
+  #
+  # ## Visualise those with fewer than 1k records
+  # ### (can tweak this - I just think there isn't much point to manual input
+  # ###  when looking at more than 1k data)
+  #
+  # if(nrow(df) <= 1000){
+  #
+  #
+  #   sp.map <- mapview::mapview(sp.sf,
+  #                              layer.name = species,
+  #                              homebutton = FALSE)
+  #
+  #   if(save.map == TRUE){
+  #
+  #     map_filename <- sprintf("%s/%s.html",
+  #                             map.directory,
+  #                             gsub(" ",
+  #                                  "_",
+  #                                  species))
+  #
+  #     htmlwidgets::saveWidget(sp.map@map,
+  #                             file = map_filename)
+  #
+  #     cat(paste0("Map is saved to ", map_filename), "\n")
+  #
+  #   }
+  #
+  # } else {
+  #
+  #   sp.map <- "more than 1k records, not mapped"
+  #
+  # }
 
   return(list(processed.data = df,
               raw.NSW.data = NSW_data,
-              rounding.comment = suspect.rounding,
-              map = sp.map))
+              rounding.comment = suspect.rounding))
 
 }
 

@@ -283,50 +283,49 @@ load_pres_bg_data <- function(species,
                              "duplicate long/lat found - suspect rounding",
                              NA)
 
-  ####################
-  ### Plot Records ###
-  ####################
-
-  ## Visualise those with fewer than 1k records
-  ### (can tweak this - I just think there isn't much point to manual input
-  ###  when looking at more than 1k data)
-
-  if(nrow(merged_df) <= 1000){
-
-    sp.sf <- sf::st_as_sf(merged_df,
-                      coords = (4:5),
-                      crs = sp::CRS("+proj=longlat +datum=WGS84"))#all ALA and GBIF coord should be in wgs84 - but this needs attention when adding more dataset in the future (and also some of ALA may be gda94 but incorrectly labelled according to Lee Belbin (I think?) - but this may be beyond our ability to fix)
-
-    sp.map <- mapview::mapview(sp.sf,
-                      layer.name = species,
-                      homebutton = FALSE)
-
-    if(save.map == TRUE){
-
-      map_filename <- sprintf("%s/%s.html",
-                                map.directory,
-                                gsub(" ",
-                                     "_",
-                                     species))
-
-      htmlwidgets::saveWidget(sp.map@map,
-                              file = map_filename)
-
-      cat(paste0("Map is saved to ", map_filename), "\n")
-
-    }
-
-  } else {
-
-    sp.map <- "more than 1k records, not mapped"
-
-  }
+  # ####################
+  # ### Plot Records ###
+  # ####################
+  #
+  # ## Visualise those with fewer than 1k records
+  # ### (can tweak this - I just think there isn't much point to manual input
+  # ###  when looking at more than 1k data)
+  #
+  # if(nrow(merged_df) <= 1000){
+  #
+  #   sp.sf <- sf::st_as_sf(merged_df,
+  #                     coords = (4:5),
+  #                     crs = sp::CRS("+proj=longlat +datum=WGS84"))#all ALA and GBIF coord should be in wgs84 - but this needs attention when adding more dataset in the future (and also some of ALA may be gda94 but incorrectly labelled according to Lee Belbin (I think?) - but this may be beyond our ability to fix)
+  #
+  #   sp.map <- mapview::mapview(sp.sf,
+  #                     layer.name = species,
+  #                     homebutton = FALSE)
+  #
+  #   if(save.map == TRUE){
+  #
+  #     map_filename <- sprintf("%s/%s.html",
+  #                               map.directory,
+  #                               gsub(" ",
+  #                                    "_",
+  #                                    species))
+  #
+  #     htmlwidgets::saveWidget(sp.map@map,
+  #                             file = map_filename)
+  #
+  #     cat(paste0("Map is saved to ", map_filename), "\n")
+  #
+  #   }
+  #
+  # } else {
+  #
+  #   sp.map <- "more than 1k records, not mapped"
+  #
+  # }
 
   return(list(raw.ala.data = occ_ala$data,
               raw.gbif.data = occ_spocc$gbif$data[[1]],
               processed.data = merged_df,
-              rounding.comment = suspect.rounding,
-              map = sp.map))
+              rounding.comment = suspect.rounding))
 
 }
 
