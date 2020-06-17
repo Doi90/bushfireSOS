@@ -21,12 +21,12 @@ model_prediction <- function(model,
   ncors <- min(ncors,
                parallel::detectCores() - 1)
 
-  ## Mask
-
-  mask <- sf::st_as_sf(rgdal::readOGR(mask))
-
-  mask <- sf::st_transform(mask,
-                           crs = 3577)
+  # ## Mask
+  #
+  # mask <- sf::st_as_sf(rgdal::readOGR(mask))
+  #
+  # mask <- sf::st_transform(mask,
+  #                          crs = 3577)
 
   ## Perform prediction over entire region
 
@@ -60,9 +60,11 @@ model_prediction <- function(model,
 
   # burnt_preds <- raster::crop(preds, mask)
 
-  burnt_preds <- raster::mask(preds, mask)
+  # burnt_preds <- raster::mask(preds, mask)
 
-  return(raster::stack(preds,
-                       burnt_preds))
+  # return(raster::stack(preds,
+  #                      burnt_preds))
+
+  return(preds)
 
 }
