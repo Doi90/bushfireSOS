@@ -23,7 +23,7 @@ model_prediction <- function(model,
 
   ## Mask
 
-  mask <- sf::st_read(mask)
+  mask <- sf::st_as_sf(rgdal::readOGR(mask))
 
   mask <- sf::st_transform(mask,
                            crs = 3577)
