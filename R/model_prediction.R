@@ -51,7 +51,7 @@ model_prediction <- function(model,
 
   ## Mask prediction to burnt areas
 
-  burnt_preds <- raster::crop(preds, mask)
+  # burnt_preds <- raster::crop(preds, mask)
 
   burnt_preds <- raster::mask(preds, mask)
 
