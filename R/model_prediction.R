@@ -21,6 +21,13 @@ model_prediction <- function(model,
   ncors <- min(ncors,
                parallel::detectCores() - 1)
 
+  ## Mask
+
+  mask <- sf::st_read(mask)
+
+  mask <- sf::st_transform(mask,
+                           crs = 3577)
+
   ## Perform prediction over entire region
 
   modtype <- class(model)[1]
