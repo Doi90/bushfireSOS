@@ -35,7 +35,7 @@ cross_validate <- function(spp_data,
 
   ncors <- as.integer(ncors)
 
-  ## Cross-validation folds
+  ## Stratified cross-validation folds
 
   folds <- caret::createFolds(df$Value,
                               k)
@@ -54,7 +54,8 @@ cross_validate <- function(spp_data,
                                        "regularisedMaxent",
                                        "fit_pres_abs_model"),
                            .packages = c('maxnet',
-                                         'precrec')) %dopar% {
+                                         'precrec',
+                                         'ecospat')) %dopar% {
 
                                            trainSet <- unlist(folds[-ks])
 
@@ -90,11 +91,17 @@ cross_validate <- function(spp_data,
                                            aucs <- precrec::auc(precrec::evalmod(scores = prediction,
                                                                                  labels = df$Value[testSet]))[1, 4]
 
-                                           # auprg <- prg::calc_auprg(prg::create_prg_curve(labels = df$Value,
-                                           #                                                pos_scores = prediction))
+                                           # Calculate Boyce index
 
-                                           outauc <- data.frame(roc = aucs)#,
-                                                                #prg = auprg)
+                                           pb_test <- df$Value[testSet]
+                                           pres_indx <- which(pb_test$Value == 1)
+
+                                           byc <- ecospat::ecospat.boyce(fit = prediction,
+                                                                         obs = prediction[pres_indx],
+                                                                         PEplot = FALSE)$Spearman.cor
+
+                                           outauc <- data.frame(roc = aucs,
+                                                                boyce = byc)
 
                                          }
 
@@ -109,8 +116,8 @@ cross_validate <- function(spp_data,
 
     # pp <- vector(mode = "numeric", length = k)
 
-    aucboth <- data.frame(roc = rep(0, k))#,
-                          #prg = 0)
+    aucboth <- data.frame(roc = rep(0, k),
+                          boyce = 0)
 
     for(ks in seq_len(k)){
 
@@ -150,8 +157,14 @@ cross_validate <- function(spp_data,
       aucboth$roc[ks] <- precrec::auc(precrec::evalmod(scores = prediction,
                                                        labels = df$Value[testSet]))[1, 4]
 
-      # aucboth$prg[ks] <- prg::calc_auprg(prg::create_prg_curve(labels = df$Value,
-      #                                                          pos_scores = prediction))
+      # Calculate Boyce index
+
+      pb_test <- df$Value[testSet]
+      pres_indx <- which(pb_test$Value == 1)
+
+      aucboth$boyce[ks] <- ecospat::ecospat.boyce(fit = prediction,
+                                                  obs = prediction[pres_indx],
+                                                  PEplot = FALSE)$Spearman.cor
 
     }
   }
@@ -162,11 +175,11 @@ cross_validate <- function(spp_data,
               round(mean(aucboth$roc), 4),
               round(sd(aucboth$roc) / sqrt(k), 4)))
 
-  # cat(sprintf("AUC-PRG score: %s ; SE = %s \n",
-  #             round(mean(aucboth$prg), 4),
-  #             round(sd(aucboth$prg) / sqrt(k), 4)))
+  cat(sprintf("Boyce index: %s ; SE = %s \n",
+              round(mean(aucboth$boyce), 4),
+              round(sd(aucboth$boyce) / sqrt(k), 4)))
 
-  return(c("ROC" = round(mean(aucboth$roc), 4)))#,
-           # "PRG" = round(mean(aucboth$prg), 4)))
+  return(c("ROC" = round(mean(aucboth$roc), 4)),
+           "Boyce" = round(mean(aucboth$boyce), 4))
 
 }
