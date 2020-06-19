@@ -18,12 +18,7 @@ cross_validate <- function(spp_data,
                            parallel = TRUE,
                            ncors = 4){
 
-  require(foreach)
-
   features <- match.arg(features)
-
-  ncors <- min(ncors,
-               parallel::detectCores() - 1)
 
   df <- spp_data$data
 
@@ -41,6 +36,9 @@ cross_validate <- function(spp_data,
                               k)
   if(parallel){
 
+    require(foreach)
+    ncors <- min(ncors,
+                 parallel::detectCores() - 1)
     ## Make a parallel computing cluster
 
     cluster <- snow::makeCluster(ncors,
@@ -70,9 +68,9 @@ cross_validate <- function(spp_data,
                                                                        features = features,
                                                                        parallel = FALSE) # parallel must be FALSE here
 
-                                             prediction <- predict(mxnt,
-                                                                   df[testSet, 14:ncol(df)],
-                                                                   type = "cloglog")
+                                             prediction <- as.vector(predict(mxnt,
+                                                                             df[testSet, 14:ncol(df)],
+                                                                             type = "cloglog"))
 
                                            } else {
 
@@ -94,7 +92,7 @@ cross_validate <- function(spp_data,
                                            # Calculate Boyce index
 
                                            pb_test <- df$Value[testSet]
-                                           pres_indx <- which(pb_test$Value == 1)
+                                           pres_indx <- which(pb_test == 1)
 
                                            byc <- ecospat::ecospat.boyce(fit = prediction,
                                                                          obs = prediction[pres_indx],
@@ -135,9 +133,9 @@ cross_validate <- function(spp_data,
                                   ncors = ncors,
                                   features = features)
 
-        prediction <- predict(mxnt,
-                              df[testSet, 14:ncol(df)],
-                              type = "cloglog")
+        prediction <- as.vector(predict(mxnt,
+                                        df[testSet, 14:ncol(df)],
+                                        type = "cloglog"))
 
       } else {
 
@@ -160,7 +158,7 @@ cross_validate <- function(spp_data,
       # Calculate Boyce index
 
       pb_test <- df$Value[testSet]
-      pres_indx <- which(pb_test$Value == 1)
+      pres_indx <- which(pb_test == 1)
 
       aucboth$boyce[ks] <- ecospat::ecospat.boyce(fit = prediction,
                                                   obs = prediction[pres_indx],
@@ -179,7 +177,7 @@ cross_validate <- function(spp_data,
               round(mean(aucboth$boyce), 4),
               round(sd(aucboth$boyce) / sqrt(k), 4)))
 
-  return(c("ROC" = round(mean(aucboth$roc), 4)),
-           "Boyce" = round(mean(aucboth$boyce), 4))
+  return(c("AUC" = round(mean(aucboth$roc), 4),
+           "Boyce" = round(mean(aucboth$boyce), 4)))
 
 }
