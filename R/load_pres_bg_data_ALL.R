@@ -257,6 +257,10 @@ load_pres_bg_data_AUS <- function(species,
 
   df <- df[df$Coordinate.Uncertainty.in.Metres <= 10000, ]
 
+  ## Remove weird NAs
+
+  df <- df[!is.na(df$ID), ]
+
   ## Check if any record left
 
   if(nrow(df) == 0){
