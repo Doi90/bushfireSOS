@@ -60,7 +60,11 @@ load_pres_bg_data <- function(species,
                                 download_reason_id = 5,
                                 email = email)
 
-  occ_ala$data$eventDate <- lubridate::as_date(occ_ala$data$eventDate)
+  if(nrow(occ_ala$data) > 0){
+
+    occ_ala$data$eventDate <- lubridate::as_date(occ_ala$data$eventDate)
+
+  }
 
   ## For the rest, use spocc
   ### for now ignore guild specific databases, just get gbif
@@ -69,7 +73,11 @@ load_pres_bg_data <- function(species,
                           from = "gbif",
                           limit = 100000)
 
-  occ_spocc$gbif$data[[1]]$eventDate <- lubridate::as_date(occ_spocc$gbif$data[[1]]$eventDate)
+  if(nrow(occ_spocc$gbif$data) > 0){
+
+    occ_spocc$gbif$data[[1]]$eventDate <- lubridate::as_date(occ_spocc$gbif$data[[1]]$eventDate)
+
+  }
 
   ## If neither search returned data, terminate function
 
@@ -108,8 +116,8 @@ load_pres_bg_data <- function(species,
 
   #then we remove data from known collections that consistently generalise their coordinates (also because we have the original data)
   occ_ala$data <- occ_ala$data[occ_ala$data$dataResourceName %nin% c("OEH Atlas of NSW Wildlife",
-                                                      "WildNet - Queensland Wildlife Data",
-                                                      "Victorian Biodiversity Atlas"),]
+                                                                     "WildNet - Queensland Wildlife Data",
+                                                                     "Victorian Biodiversity Atlas"),]
   occ_spocc$gbif$data[[1]] <- occ_spocc$gbif$data[[1]][occ_spocc$gbif$data[[1]]$collectionCode != "BioNet Atlas of NSW Wildlife",]#VBA and WildNet are not identifiable in GBIF, this is the best we can do, after a quick check this seems ok (ie remaining records at least look ok)
 
 
