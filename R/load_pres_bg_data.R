@@ -73,7 +73,7 @@ load_pres_bg_data <- function(species,
                           from = "gbif",
                           limit = 100000)
 
-  if(nrow(occ_spocc$gbif$data) > 0){
+  if(nrow(occ_spocc$gbif$data[[1]]) > 0){
 
     occ_spocc$gbif$data[[1]]$eventDate <- lubridate::as_date(occ_spocc$gbif$data[[1]]$eventDate)
 
