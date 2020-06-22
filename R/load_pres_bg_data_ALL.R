@@ -249,6 +249,14 @@ load_pres_bg_data_AUS <- function(species,
              df$Latitude > -90 &
              df$Latitude < 90, ]
 
+  ## Date checks
+
+  df <- df[df$Date > lubridate::as_date("1970-01-01"), ]
+
+  ## Coordinate uncertainty
+
+  df <- df[df$Coordinate.Uncertainty.in.Metres <= 10000, ]
+
   ## Check if any record left
 
   if(nrow(df) == 0){
