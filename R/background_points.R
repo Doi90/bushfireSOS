@@ -73,6 +73,8 @@ background_points <- function(species,
 
     bg$Value <- 0
 
+    type <- "target group background"
+
   } else {
 
     ## Generate background points
@@ -96,6 +98,8 @@ background_points <- function(species,
                      Value = 0,
                      stringsAsFactors = FALSE)
 
+    type <- "random background"
+
   }
 
     ## Filter presence points by pixel
@@ -114,6 +118,9 @@ background_points <- function(species,
 
   spp_data$data <- rbind(spp_data$data,
                          bg)
+
+  message(sprintf("BG type: %s",
+                  type))
 
   return(spp_data)
 
