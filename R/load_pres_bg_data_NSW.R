@@ -55,7 +55,8 @@ load_pres_bg_data_NSW <- function(species,
                          stringsAsFactors = FALSE,
                          sep = "\t",
                          skip = 4,
-                         header = TRUE)
+                         header = TRUE,
+                         fill = TRUE)
 
   if(nrow(NSW_data) == 0){
     stop("Not run: no records found")
@@ -77,7 +78,7 @@ load_pres_bg_data_NSW <- function(species,
                    "Longitude" = NSW_data$Longitude_GDA94,
                    "Latitude" = NSW_data$Latitude_GDA94,
                    #add date for duplicate processing
-                   "Date" = lubridate::as_date(NSW_data$DateFirst),
+                   "Date" = lubridate::as_date(NSW_data$DateFirst, format = "%d/%m/%Y"),
                    "Basis.of.Record" = NSW_data$ObservationType,
                    "Locality" = NSW_data$Description,
                    "Institute" = NSW_data$DatasetName,
