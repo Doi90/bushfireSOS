@@ -56,6 +56,10 @@ background_points <- function(species,
 
   filter_bg <- filter_bg[filter_bg$Coordinate.Uncertainty.in.Metres < 10000, ]
 
+  ## Filter background points by pixel
+
+  filter_bg <- pixel_filtering(data = filter_bg,
+                               raster = raster::raster(bias_layer))
 
   ## Sample from remaining background points
   ##TODO Set number of samples based on number of presences?
@@ -94,12 +98,7 @@ background_points <- function(species,
 
   }
 
-  ## Filter background points by pixel
-
-  bg <- pixel_filtering(data = bg,
-                                   raster = raster::raster(bias_layer))
-
-  ## Filter presence points by pixel
+    ## Filter presence points by pixel
 
   spp_data$data <- mask_species_data(spp_data$data,
                                      region)
