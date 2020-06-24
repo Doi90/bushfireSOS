@@ -55,7 +55,8 @@ load_pres_bg_data_NSW <- function(species,
                          stringsAsFactors = FALSE,
                          sep = "\t",
                          skip = 4,
-                         header = TRUE)
+                         header = TRUE,
+                         fill = TRUE)
 
   if(nrow(NSW_data) == 0){
     stop("Not run: no records found")
