@@ -251,7 +251,8 @@ load_pres_bg_data_AUS <- function(species,
 
   ## Date checks
 
-  df <- df[df$Date > lubridate::as_date("1970-01-01"), ]
+  df <- df[df$Date > lubridate::as_date("1970-01-01") |
+             is.na(df$Date), ]
 
   ## Coordinate uncertainty
 
