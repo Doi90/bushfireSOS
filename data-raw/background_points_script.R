@@ -12,11 +12,12 @@ df_list <- split(df, seq_len(nrow(df)))
 
 data_list <- lapply(df_list,
                     function(x){
-                      
-                      tmp <- tryCatch(expr = load_pres_bg_data_AUS_incl_ALA_GBIF(species = x$Scientific.name,
-                                                                                 file.vic = "bushfireResponse_data/spp_data_raw/VIC sensitive species data/FAUNA_requested_spp_ALL.gdb",
-                                                                                 email = "davidpw@student.unimelb.edu.au",
-                                                                                 save.map = FALSE),
+
+                      tmp <- tryCatch(expr = load_pres_bg_data_AUS(species = x$Scientific.name,
+                                                                   file.vic = "bushfireResponse_data/spp_data_raw/VIC sensitive species data/FAUNA_requested_spp_ALL.gdb",
+                                                                   email = "davidpw@student.unimelb.edu.au",
+                                                                   save.map = FALSE,
+                                                                   region = c("VIC", "NSW", "QLD", "SA", "NT", "WA", "TAS")),
                                       error = function(err){return(
                                         list(data = data.frame("ID" = numeric(),
                                                                "Origin" = character(),
@@ -31,13 +32,13 @@ data_list <- lapply(df_list,
                                                                "Collection" = character(),
                                                                "Coordinate.Uncertainty.in.Metres" = numeric(),
                                                                stringsAsFactors = FALSE)))})
-                      
+
                       tmp <- tmp$data
-                      
+
                       tmp$Guild <- rep(x$Group, nrow(tmp))
-                      
+
                       return(tmp)
-                      
+
                     })
 
 bg <- do.call(rbind.data.frame,
@@ -45,44 +46,5 @@ bg <- do.call(rbind.data.frame,
 
 saveRDS(bg,
         "../bushfireSOS/bg.rds")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-head(df_list)
-
-
-x <- df_list[[1]]
-rm(tmp)
-debugonce(bushfireSOS::load_pres_bg_data_AUS_incl_ALA_GBIF)
-tmp <- tryCatch(expr = load_pres_bg_data_AUS_incl_ALA_GBIF(species = x$Scientific.name,
-                                                           file.vic = "bushfireResponse_data/spp_data_raw/VIC sensitive species data/FAUNA_requested_spp_ALL.gdb",
-                                                           email = "davidpw@student.unimelb.edu.au",
-                                                           save.map = FALSE),
-                error = function(err){return(data.frame("ID" = numeric(),
-                                                        "Origin" = character(),
-                                                        "Species" = character(),
-                                                        "Longitude" = numeric(),
-                                                        "Latitude" = numeric(),
-                                                        #add date for duplicate processing
-                                                        "Date" = numeric(),
-                                                        "Basis.of.Record" = character(),
-                                                        "Locality" = character(),
-                                                        "Institute" = character(),
-                                                        "Collection" = character(),
-                                                        "Coordinate.Uncertainty.in.Metres" = numeric(),
-                                                        stringsAsFactors = FALSE))})
 
 
