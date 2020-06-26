@@ -56,10 +56,15 @@ background_points <- function(species,
 
   filter_bg <- filter_bg[filter_bg$Coordinate.Uncertainty.in.Metres < 10000, ]
 
+  # mask the bias layer based on region
+
+  bias_layer <- mask_data(env_data = raster::raster(bias_layer),
+                          region = region)
+
   ## Filter background points by pixel
 
   filter_bg <- pixel_filtering(data = filter_bg,
-                               raster = raster::raster(bias_layer))
+                               raster = bias_layer)
 
   ## Sample from remaining background points
   ##TODO Set number of samples based on number of presences?
@@ -79,7 +84,7 @@ background_points <- function(species,
 
     ## Generate background points
 
-    bg_dismo <- dismo::randomPoints(raster::raster(bias_layer),
+    bg_dismo <- dismo::randomPoints(1 / bias_layer,
                                     10000,
                                     prob = TRUE)
 
@@ -108,7 +113,7 @@ background_points <- function(species,
                                      region)
 
   spp_data$data <- pixel_filtering(data = spp_data$data,
-                                   raster = raster::raster(bias_layer))
+                                   raster = bias_layer)
 
   ## Combine spp and bg dfs
 
