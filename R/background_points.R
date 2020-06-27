@@ -56,15 +56,10 @@ background_points <- function(species,
 
   filter_bg <- filter_bg[filter_bg$Coordinate.Uncertainty.in.Metres < 10000, ]
 
-  # mask the bias layer based on region
-
-  bias_layer <- mask_data(env_data = raster::raster(bias_layer),
-                          region = region)
-
   ## Filter background points by pixel
 
   filter_bg <- pixel_filtering(data = filter_bg,
-                               raster = bias_layer)
+                               raster = raster::raster(bias_layer))
 
   ## Sample from remaining background points
   ##TODO Set number of samples based on number of presences?
@@ -81,6 +76,11 @@ background_points <- function(species,
     type <- "target group background"
 
   } else {
+
+    # mask the bias layer based on region
+
+    bias_layer <- mask_data(env_data = raster::raster(bias_layer),
+                            region = region)
 
     ## Generate background points
 
