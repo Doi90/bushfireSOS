@@ -12,6 +12,12 @@
 load_env_data <- function(stack_file,
                           region){
 
+  ## Add ACT to NSW
+  if("NSW" %in% region){
+    if(!"ACT" %in% region)
+      region <- c(region, "ACT")
+  }
+
   ## make a temp file for the vrt
   tmp <- tempdir(check = FALSE)
   outfile <- file.path(tmp, "bushfire_raster.vrt")
