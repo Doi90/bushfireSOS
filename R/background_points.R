@@ -1,3 +1,23 @@
+#' Fast(er) random probability sampling from raster files
+#'
+#' @param r raster file
+#' @param size sample size
+#'
+#' @return coordinate matrix
+#' @export
+#'
+#' @examples
+fastRandomPoints <- function(r, size = 1e4) {
+  if(raster::nlayers(r) > 1) r <- r[[1]]
+  val <- raster::getValues(r)
+  val_notNA <- which(!is.na(val))
+  x <- sample(val_notNA, size, prob = val[val_notNA])
+  pts <- raster::xyFromCell(r, x)
+  return(pts)
+}
+
+
+
 #' Generate background points
 #'
 #' @param species Charaacter vector of species name
@@ -11,14 +31,14 @@
 #' @export
 #'
 #' @examples
-
 background_points <- function(species,
                               spp_data,
                               guild,
                               region,
                               background_group,
                               bias_layer,
-                              sample_min){
+                              sample_min,
+                              dismo_sampling = FALSE){
 
   ## Region formatting
 
@@ -80,8 +100,8 @@ background_points <- function(species,
     # mask the bias layer based on region
 
     bias_inv <- mask_data(env_data = raster::raster(bias_layer),
-                            region = region,
-                            crop = TRUE)
+                          region = region,
+                          crop = TRUE)
 
     ## invert the values
     bias_inv <- raster::setMinMax(bias_inv)
@@ -89,9 +109,14 @@ background_points <- function(species,
 
     ## Generate background points
 
-    bg_dismo <- dismo::randomPoints(bias_inv,
-                                    10000,
-                                    prob = TRUE)
+    if(dismo_sampling){
+      bg_dismo <- dismo::randomPoints(bias_inv,
+                                      10000,
+                                      prob = TRUE)
+    } else{
+      bg_dismo <- fastRandomPoints(bias_inv, size = 10000)
+    }
+
 
     bg <- data.frame(ID = NA,
                      Origin = NA,

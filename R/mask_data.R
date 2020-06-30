@@ -8,7 +8,6 @@
 #'
 #' @examples
 #'
-
 mask_data <- function(env_data,
                       region,
                       crop = FALSE){
@@ -53,3 +52,4 @@ mask_data <- function(env_data,
   return(env_data)
 
 }
+
