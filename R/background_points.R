@@ -79,12 +79,17 @@ background_points <- function(species,
 
     # mask the bias layer based on region
 
-    bias_layer <- mask_data(env_data = raster::raster(bias_layer),
-                            region = region)
+    bias_inv <- mask_data(env_data = raster::raster(bias_layer),
+                            region = region,
+                            crop = TRUE)
+
+    ## invert the values
+    bias_inv <- raster::setMinMax(bias_inv)
+    bias_inv <- (raster::maxValue(bias_inv) - bias_inv) / (raster::maxValue(bias_inv) - raster::minValue(bias_inv))
 
     ## Generate background points
 
-    bg_dismo <- dismo::randomPoints(1 / bias_layer,
+    bg_dismo <- dismo::randomPoints(bias_inv,
                                     10000,
                                     prob = TRUE)
 
@@ -113,7 +118,7 @@ background_points <- function(species,
                                      region)
 
   spp_data$data <- pixel_filtering(data = spp_data$data,
-                                   raster = bias_layer)
+                                   raster = raster::raster(bias_layer))
 
   ## Combine spp and bg dfs
 

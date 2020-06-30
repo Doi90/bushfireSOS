@@ -53,7 +53,8 @@ cross_validate <- function(spp_data,
                                        "fit_pres_abs_model"),
                            .packages = c('maxnet',
                                          'precrec',
-                                         'ecospat')) %dopar% {
+                                         'ecospat',
+                                         'dismo')) %dopar% {
 
                                            trainSet <- unlist(folds[-ks])
 
