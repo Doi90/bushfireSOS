@@ -38,7 +38,7 @@ mask_data <- function(env_data,
                                          returnclass = "sf")
 
   AUS.shapes <- sf::st_transform(AUS.shapes,
-                                 CRSobj = raster::crs(env_data))
+                                 crs = raster::crs(env_data))
 
   AUS.shapes <- AUS.shapes[AUS.shapes$name %in% region, ]
 
