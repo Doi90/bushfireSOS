@@ -16,6 +16,7 @@ cross_validate <- function(spp_data,
                            k = 5,
                            features = c("default", "lqp", "lq", "l"),
                            parallel = TRUE,
+                           parallel_tuning = FALSE,
                            ncors = 4){
 
   features <- match.arg(features)
@@ -130,7 +131,7 @@ cross_validate <- function(spp_data,
 
         mxnt <- fit_pres_bg_model(list(data = df[trainSet, ]),
                                   tuneParam = TRUE,
-                                  parallel = FALSE, # can be TRUE
+                                  parallel = parallel_tuning,
                                   ncors = ncors,
                                   features = features)
 
