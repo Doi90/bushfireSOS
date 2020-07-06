@@ -12,7 +12,7 @@
 fit_pres_bg_model <- function(spp_data,
                               tuneParam = TRUE,
                               k = 5,
-                              features = c("default", "lqp", "lq", "l"),
+                              features = c("default", "lqp", "lqh", "lq", "l"),
                               parallel = TRUE,
                               ncors = 4){
 

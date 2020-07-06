@@ -14,7 +14,7 @@
 cross_validate <- function(spp_data,
                            type = c("po", "pa"),
                            k = 5,
-                           features = c("default", "lqp", "lq", "l"),
+                           features = c("default", "lqp", "lqh", "lq", "l"),
                            parallel = FALSE,
                            parallel_tuning = FALSE,
                            ncors = 4){

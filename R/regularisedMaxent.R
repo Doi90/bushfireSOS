@@ -10,7 +10,7 @@
 
 regularisedMaxent <- function(data,
                               kf = 4,
-                              features = c("default", "lqp", "lq", "l"),
+                              features = c("default", "lqp", "lqh", "lq", "l"),
                               parallel = TRUE,
                               ncors = 4){
 
