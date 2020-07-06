@@ -6,7 +6,7 @@
 #' @export
 #'
 #' @examples
-map_sp_data <- function(spp_data){
-  occurrence <- sf::st_as_sf(spp_data$data, coords = c("Longitude", "Latitude"), crs = 3577)
+map_sp_data <- function(spp_data, crs = 3577){
+  occurrence <- sf::st_as_sf(spp_data$data, coords = c("Longitude", "Latitude"), crs = crs)
   mapview::mapview(occurrence)
 }
