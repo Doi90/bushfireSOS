@@ -11,6 +11,9 @@
 #' @examples
 map_sp_data <- function(spp_data, crs = 3577, zcol = "Value", only_presences = FALSE){
   dt <- spp_data$data
+  zcol <- zcol[1]
+  if(! zcol %in% names(dt))
+    zcol <- NULL
   if(only_presences)
     dt <- dplyr::filter(dt, Value == 1)
   occurrence <- sf::st_as_sf(dt, coords = c("Longitude", "Latitude"), crs = crs)
