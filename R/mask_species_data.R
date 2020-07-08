@@ -69,14 +69,20 @@ mask_species_data <- function(spdata, region){
 
   ## Assign state to each record
 
-  spdata.state.assignment <- unlist(sf::st_intersects(spdata.sf,
-                                                      AUS.shapes))
+  spdata.state.assignment <- sf::st_intersects(spdata.sf,
+                                                      AUS.shapes)
 
-  spdata.state.assignment <- AUS.shapes$name[spdata.state.assignment]
+  ## Get the number(s) for target region
+  state.no <- which(AUS.shapes$name %in% region)
 
   ## Subset to just target state
 
-  spdata.target.state <- spdata[spdata.state.assignment %in% region,]
+  spdata.target.state <- spdata[spdata.state.assignment[] %in% state.no,]
+
+  ## Remove possible NAs
+
+  spdata.target.state <-spdata.target.state[!(is.na(spdata.target.state$Longitude) | is.na(spdata.target.state$Latitude)),]
+
 
   return(spdata.target.state)
 
