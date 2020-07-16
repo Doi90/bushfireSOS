@@ -143,29 +143,35 @@ load_pres_bg_data_AUS_improper <- function(species,
 
   }
 
-  # if("SA" %in% region){
-  #
-  #   df_tmp <- tryCatch(expr = load_pres_bg_data_SA(species = species,
-  #                                                  save.map = TRUE,
-  #                                                  map.directory = map.directory),
-  #                      error = function(err){data.frame("ID" = numeric(),
-  #                                                       "Origin" = character(),
-  #                                                       "Species" = character(),
-  #                                                       "Longitude" = numeric(),
-  #                                                       "Latitude" = numeric(),
-  #                                                       #add date for duplicate processing
-  #                                                       "Date" = numeric(),
-  #                                                       "Basis.of.Record" = character(),
-  #                                                       "Locality" = character(),
-  #                                                       "Institute" = character(),
-  #                                                       "Collection" = character(),
-  #                                                       "Coordinate.Uncertainty.in.Metres" = numeric(),
-  #                                                       stringsAsFactors = FALSE)})
-  #
-  #   df <- rbind(df,
-  #               df_tmp$processed.data)
-  #
-  # }
+  if("SA" %in% region){
+
+    df_tmp <- tryCatch(expr = load_pres_bg_data_SA(species = species,
+                                                   save.map = FALSE,
+                                                   map.directory = map.directory),
+                       error = function(err){data.frame("ID" = numeric(),
+                                                        "Origin" = character(),
+                                                        "Species" = character(),
+                                                        "Longitude" = numeric(),
+                                                        "Latitude" = numeric(),
+                                                        #add date for duplicate processing
+                                                        "Date" = numeric(),
+                                                        "Basis.of.Record" = character(),
+                                                        "Locality" = character(),
+                                                        "Institute" = character(),
+                                                        "Collection" = character(),
+                                                        "Coordinate.Uncertainty.in.Metres" = numeric(),
+                                                        stringsAsFactors = FALSE)})
+
+    df <- rbind(df,
+                df_tmp$processed.data)
+
+    if(is.list(df_tmp)){
+
+      raw_data$SA <- df_tmp$raw.SA.data
+
+    }
+
+  }
 
   # if("WA" %in% region){
   #
