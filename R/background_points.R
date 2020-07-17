@@ -38,7 +38,8 @@ background_points <- function(species,
                               background_group,
                               bias_layer,
                               sample_min,
-                              dismo_sampling = FALSE){
+                              dismo_sampling = FALSE,
+                              KI_mask = FALSE){
 
   ## Region formatting
 
@@ -102,6 +103,12 @@ background_points <- function(species,
     bias_inv <- mask_data(env_data = raster::raster(bias_layer),
                           region = region,
                           crop = TRUE)
+
+
+    # add KI mask
+    if(KI_mask == TRUE){
+      bias_inv <- crop(bias_inv,extent(406038,553809,-3970872,-3892487))
+    }
 
     ## invert the values
     bias_inv <- raster::setMinMax(bias_inv)
