@@ -80,19 +80,19 @@ load_pres_bg_data_SA_improper <- function(species,
 
   ## Coordinate uncertainty
 
-  SA_data$RELIABDESC <- gsub("0-5m", "5", SA_data$RELIABDESC)
-  SA_data$RELIABDESC <- gsub("0-10m", "10", SA_data$RELIABDESC)
-  SA_data$RELIABDESC <- gsub("5-50m", "50", SA_data$RELIABDESC)
-  SA_data$RELIABDESC <- gsub("51-100m", "100", SA_data$RELIABDESC)
-  SA_data$RELIABDESC <- gsub("101-250m", "250", SA_data$RELIABDESC)
-  SA_data$RELIABDESC <- gsub("251-500m", "500", SA_data$RELIABDESC)
-  SA_data$RELIABDESC <- gsub("501-1000m", "1000", SA_data$RELIABDESC)
-  SA_data$RELIABDESC <- gsub("1-10km", "10000", SA_data$RELIABDESC)
-  SA_data$RELIABDESC <- gsub("11-25km", "25000", SA_data$RELIABDESC)
-  SA_data$RELIABDESC <- gsub("31-125km", "125000", SA_data$RELIABDESC)
-  SA_data$RELIABDESC <- gsub("No entered", NA, SA_data$RELIABDESC)
+  df$Coordinate.Uncertainty.in.Metres <- gsub("0-5m", "5", df$Coordinate.Uncertainty.in.Metres)
+  df$Coordinate.Uncertainty.in.Metres <- gsub("0-10m", "10", df$Coordinate.Uncertainty.in.Metres)
+  df$Coordinate.Uncertainty.in.Metres <- gsub("5-50m", "50", df$Coordinate.Uncertainty.in.Metres)
+  df$Coordinate.Uncertainty.in.Metres <- gsub("51-100m", "100", df$Coordinate.Uncertainty.in.Metres)
+  df$Coordinate.Uncertainty.in.Metres <- gsub("101-250m", "250", df$Coordinate.Uncertainty.in.Metres)
+  df$Coordinate.Uncertainty.in.Metres <- gsub("251-500m", "500", df$Coordinate.Uncertainty.in.Metres)
+  df$Coordinate.Uncertainty.in.Metres <- gsub("501-1000m", "1000", df$Coordinate.Uncertainty.in.Metres)
+  df$Coordinate.Uncertainty.in.Metres <- gsub("1-10km", "10000", df$Coordinate.Uncertainty.in.Metres)
+  df$Coordinate.Uncertainty.in.Metres <- gsub("11-25km", "25000", df$Coordinate.Uncertainty.in.Metres)
+  df$Coordinate.Uncertainty.in.Metres <- gsub("31-125km", "125000", df$Coordinate.Uncertainty.in.Metres)
+  df$Coordinate.Uncertainty.in.Metres <- gsub("No entered", NA, df$Coordinate.Uncertainty.in.Metres)
 
-  SA_data$RELIABDESC <- as.numeric(SA_data$RELIABDESC)
+  df$Coordinate.Uncertainty.in.Metres <- as.numeric(df$Coordinate.Uncertainty.in.Metres)
 
   ## Remove spatial duplicates (other duplicate types may matter, think later)
 
