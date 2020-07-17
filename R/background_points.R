@@ -107,7 +107,7 @@ background_points <- function(species,
 
     # add KI mask
     if(KI_mask == TRUE){
-      bias_inv <- crop(bias_inv,extent(406038,553809,-3970872,-3892487))
+      bias_inv <- raster::crop(bias_inv,raster::extent(406038,553809,-3970872,-3892487))
     }
 
     ## invert the values
