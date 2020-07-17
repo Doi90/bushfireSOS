@@ -5,6 +5,7 @@
 #' @param k Integer. Number of cross-validation folds (default = 5)
 #' @param parallel Logical. To run cross-validation in parallel
 #' @param ncors Integer. Number of CPU cores to use
+#' @param tuneParam_CV Logical. Whether to tune the regularisation multiplier
 #'
 #' @return Returns mean and print mean and standard deviation of model's AUC
 #' @export
@@ -17,7 +18,8 @@ cross_validate <- function(spp_data,
                            features = c("default", "lqp", "lqh", "lq", "l"),
                            parallel = FALSE,
                            parallel_tuning = FALSE,
-                           ncors = 4){
+                           ncors = 4,
+                           tuneParam_CV = TRUE){
 
   features <- match.arg(features)
 
@@ -66,7 +68,7 @@ cross_validate <- function(spp_data,
                                              ## Fit a maxent
 
                                              mxnt <- fit_pres_bg_model(df[trainSet, ],
-                                                                       tuneParam = TRUE,
+                                                                       tuneParam = tuneParam_CV,
                                                                        features = features,
                                                                        parallel = FALSE) # parallel must be FALSE here
 
@@ -130,7 +132,7 @@ cross_validate <- function(spp_data,
         ## fit a maxent
 
         mxnt <- fit_pres_bg_model(list(data = df[trainSet, ]),
-                                  tuneParam = TRUE,
+                                  tuneParam = tuneParam_CV,
                                   parallel = parallel_tuning,
                                   ncors = ncors,
                                   features = features)
