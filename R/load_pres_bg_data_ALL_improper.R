@@ -262,7 +262,7 @@ load_pres_bg_data_AUS_improper <- function(species,
 
   ## Coordinate uncertainty
 
-  df <- df[df$Coordinate.Uncertainty.in.Metres <= 10000, ]
+  df <- df[df$Coordinate.Uncertainty.in.Metres <= 1000 & !is.na(df$Coordinate.Uncertainty.in.Metres), ]
 
   ## Remove weird NAs
 
