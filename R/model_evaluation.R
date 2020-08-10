@@ -102,8 +102,18 @@ cross_validate <- function(spp_data,
                                                                          obs = prediction[pres_indx],
                                                                          PEplot = FALSE)$Spearman.cor
 
+                                           # calculate the best threshold
+                                           thedata <- data.frame(id = 1:length(prediction),
+                                                                 obs = df$Value[testSet],
+                                                                 pred = prediction)
+
+                                           thr <- PresenceAbsence::optimal.thresholds(DATA = thedata,
+                                                                                      threshold = 101,
+                                                                                      which.model = 1,
+                                                                                      opt.methods = "MaxSens+Spec")
                                            outauc <- data.frame(roc = aucs,
-                                                                boyce = byc)
+                                                                boyce = byc,
+                                                                threshold = thr$pred[1])
 
                                          }
 
@@ -119,7 +129,8 @@ cross_validate <- function(spp_data,
     # pp <- vector(mode = "numeric", length = k)
 
     aucboth <- data.frame(roc = rep(0, k),
-                          boyce = 0)
+                          boyce = 0,
+                          threshold = NA)
 
     for(ks in seq_len(k)){
 
@@ -168,6 +179,17 @@ cross_validate <- function(spp_data,
                                                   obs = prediction[pres_indx],
                                                   PEplot = FALSE)$Spearman.cor
 
+      # calculate the best threshold
+      thedata <- data.frame(id = 1:length(prediction),
+                            obs = df$Value[testSet],
+                            pred = prediction)
+
+      thr <- PresenceAbsence::optimal.thresholds(DATA = thedata,
+                                                 threshold = 101,
+                                                 which.model = 1,
+                                                 opt.methods = "MaxSens+Spec")
+
+      aucboth$threshold[ks] <- thr$pred[1]
     }
   }
 
@@ -181,7 +203,12 @@ cross_validate <- function(spp_data,
               round(mean(aucboth$boyce), 4),
               round(sd(aucboth$boyce) / sqrt(k), 4)))
 
+  cat(sprintf("Best threshold: %s ; SE = %s \n",
+              round(mean(aucboth$threshold), 4),
+              round(sd(aucboth$threshold) / sqrt(k), 3)))
+
   return(c("AUC" = round(mean(aucboth$roc), 4),
-           "Boyce" = round(mean(aucboth$boyce), 4)))
+           "Boyce" = round(mean(aucboth$boyce), 4),
+           "Threshold" = round(mean(aucboth$threshold), 3)))
 
 }
