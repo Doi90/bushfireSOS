@@ -229,6 +229,37 @@ load_pres_bg_data_AUS_improper <- function(species,
 
   }
 
+  ## Get BirdLife Data
+
+  df_tmp <- tryCatch(expr = load_pres_bg_data_BirdLife(species = species,
+                                                       save.map = FALSE,
+                                                       map.directory = map.directory),
+                     error = function(err){
+                       return(list(processed.data = data.frame("ID" = numeric(),
+                                                               "Origin" = character(),
+                                                               "Species" = character(),
+                                                               "Longitude" = numeric(),
+                                                               "Latitude" = numeric(),
+                                                               #add date for duplicate processing
+                                                               "Date" = lubridate::as_date(numeric()),
+                                                               "Basis.of.Record" = character(),
+                                                               "Locality" = character(),
+                                                               "Institute" = character(),
+                                                               "Collection" = character(),
+                                                               "Coordinate.Uncertainty.in.Metres" = numeric(),
+                                                               stringsAsFactors = FALSE)))
+                     })
+
+  df <- rbind(df,
+              df_tmp$processed.data)
+
+  if(is.list(df_tmp)){
+
+    raw_data$BirdLife <- df_tmp$raw.BL.data
+
+  }
+
+
   ## Check for duplicate records due to state database overlap
 
   #####################
