@@ -69,7 +69,7 @@ load_pres_bg_data_BirdLife <- function(species,
                    "Basis.of.Record" = NA,
                    "Locality" = NA,
                    "Institute" = BL_data$Source,
-                   "Collection" = BL_data$NA,
+                   "Collection" = NA,
                    "Coordinate.Uncertainty.in.Metres" = 1,
                    stringsAsFactors = FALSE)
 
