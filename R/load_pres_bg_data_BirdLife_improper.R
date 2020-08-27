@@ -53,6 +53,8 @@ load_pres_bg_data_BirdLife_improper <- function(species,
   BL_data <- read.csv("bushfireResponse_data/spp_data_raw/BirdLife/BirdLife_data.csv",
                       stringsAsFactors = FALSE)
 
+  BL_data <- BL_data[BL_data$Scientific.Name == species, ]
+
   if(nrow(BL_data) == 0){
     stop("Not run: no records found")
   }
