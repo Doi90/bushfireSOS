@@ -13,7 +13,8 @@
 #'
 
 
-load_pres_bg_data_NSW_improper <- function(species,
+load_pres_bg_data_NSW_improper <- function(dir_path,
+                                           species,
                                            region = "all",
                                            save.map = TRUE,
                                            map.directory = "."){
@@ -48,7 +49,8 @@ load_pres_bg_data_NSW_improper <- function(species,
   ### Load Data ###
   #################
 
-  NSW_data <- read.table(sprintf("bushfireResponse_data/spp_data_raw/NSW_%s.txt",
+  NSW_data <- read.table(sprintf("%s/NSW_%s.txt",
+                                 dir_path,
                                  gsub(" ",
                                       "_",
                                       tolower(species))),
