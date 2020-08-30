@@ -19,8 +19,7 @@ regularisedMaxent <- function(data,
 
   ms <- c(0.25, 0.5, 1, 2, 3, 4)
 
-  folds <- caret::createFolds(data$Value,
-                              k = kf)
+  folds <- caret::createFolds(y = as.factor(data$Value), k = kf)
 
   presences <- data$Value
 

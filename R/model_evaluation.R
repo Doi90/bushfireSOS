@@ -35,8 +35,7 @@ cross_validate <- function(spp_data,
 
   ## Stratified cross-validation folds
 
-  folds <- caret::createFolds(df$Value,
-                              k)
+  folds <- caret::createFolds(y = as.factor(df$Value), k)
   if(parallel){
 
     require(foreach)
