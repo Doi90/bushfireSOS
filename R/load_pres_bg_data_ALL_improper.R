@@ -15,7 +15,11 @@
 
 load_pres_bg_data_AUS_improper <- function(species,
                                            region = c("VIC","NSW","QLD"),
-                                           file.vic,
+                                           dir.NSW,
+                                           dir.QLD,
+                                           file.VIC,
+                                           file.SA,
+                                           file.BirdLife,
                                            email,
                                            save.map,
                                            map.directory){
@@ -48,7 +52,7 @@ load_pres_bg_data_AUS_improper <- function(species,
 
   if("VIC" %in% region){
 
-    df_tmp <- tryCatch(expr = load_pres_bg_data_VIC_improper(file = file.vic,
+    df_tmp <- tryCatch(expr = load_pres_bg_data_VIC_improper(file = file.VIC,
                                                              species = species,
                                                              save.map = FALSE,
                                                              map.directory = map.directory),
@@ -81,7 +85,8 @@ load_pres_bg_data_AUS_improper <- function(species,
 
   if("NSW" %in% region){
 
-    df_tmp <- tryCatch(expr = load_pres_bg_data_NSW_improper(species = species,
+    df_tmp <- tryCatch(expr = load_pres_bg_data_NSW_improper(dir_path = dir.NSW,
+                                                             species = species,
                                                              save.map = FALSE,
                                                              map.directory = map.directory),
                        error = function(err){
@@ -113,7 +118,8 @@ load_pres_bg_data_AUS_improper <- function(species,
 
   if("QLD" %in% region){
 
-    df_tmp <- tryCatch(expr = load_pres_bg_data_QLD_improper(species = species,
+    df_tmp <- tryCatch(expr = load_pres_bg_data_QLD_improper(dir_path = dir.QLD,
+                                                             species = species,
                                                              save.map = FALSE,
                                                              map.directory = map.directory),
                        error = function(err){
@@ -145,7 +151,8 @@ load_pres_bg_data_AUS_improper <- function(species,
 
   if("SA" %in% region){
 
-    df_tmp <- tryCatch(expr = load_pres_bg_data_SA(species = species,
+    df_tmp <- tryCatch(expr = load_pres_bg_data_SA(filepath = file.SA,
+                                                   species = species,
                                                    save.map = FALSE,
                                                    map.directory = map.directory),
                        error = function(err){data.frame("ID" = numeric(),
@@ -231,7 +238,8 @@ load_pres_bg_data_AUS_improper <- function(species,
 
   ## Get BirdLife Data
 
-  df_tmp <- tryCatch(expr = load_pres_bg_data_BirdLife(species = species,
+  df_tmp <- tryCatch(expr = load_pres_bg_data_BirdLife(filepath = file.BirdLife,
+                                                       species = species,
                                                        save.map = FALSE,
                                                        map.directory = map.directory),
                      error = function(err){
