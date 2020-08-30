@@ -13,10 +13,11 @@
 #'
 
 
-load_pres_bg_data_SA <- function(species,
-                                  region = "all",
-                                  save.map = TRUE,
-                                  map.directory = "."){
+load_pres_bg_data_SA <- function(filepath,
+                                 species,
+                                 region = "all",
+                                 save.map = TRUE,
+                                 map.directory = "."){
 
   #TODO Check coordinate projections
 
@@ -48,7 +49,7 @@ load_pres_bg_data_SA <- function(species,
   ### Load Data ###
   #################
 
-  SA_data <- openxlsx::read.xlsx("bushfireResponse_data/spp_data_raw/BIODATAREQUESTS_table_UniMelbourne.xlsx",
+  SA_data <- openxlsx::read.xlsx(filepath,
                                  sheet = "Fauna",
                                  detectDates = TRUE)
 
