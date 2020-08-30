@@ -13,10 +13,11 @@
 #'
 
 
-load_pres_bg_data_QLD_improper <- function(species,
-                                  region = "all",
-                                  save.map = TRUE,
-                                  map.directory = "."){
+load_pres_bg_data_QLD_improper <- function(dir_path,
+                                           species,
+                                           region = "all",
+                                           save.map = TRUE,
+                                           map.directory = "."){
 
   #TODO Check coordinate projections
 
@@ -50,7 +51,8 @@ load_pres_bg_data_QLD_improper <- function(species,
 
   ## Load in QLD data from file
 
-  QLD_data <- read.csv(sprintf("bushfireResponse_data/spp_data_raw/QLD_%s.csv",
+  QLD_data <- read.csv(sprintf("%s/QLD_%s.csv",
+                               dir_path,
                                gsub(" ",
                                     "_",
                                     tolower(species))),
