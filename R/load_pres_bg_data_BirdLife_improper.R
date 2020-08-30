@@ -13,7 +13,8 @@
 #'
 
 
-load_pres_bg_data_BirdLife_improper <- function(species,
+load_pres_bg_data_BirdLife_improper <- function(filepath,
+                                                species,
                                                 region = "all",
                                                 save.map = TRUE,
                                                 map.directory = "."){
@@ -50,7 +51,7 @@ load_pres_bg_data_BirdLife_improper <- function(species,
 
   ## Load in BirdLife data from file
 
-  BL_data <- read.csv("bushfireResponse_data/spp_data_raw/BirdLife/BirdLife_data.csv",
+  BL_data <- read.csv(filepath,
                       stringsAsFactors = FALSE)
 
   BL_data <- BL_data[BL_data$Scientific.Name == species, ]
