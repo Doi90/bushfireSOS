@@ -85,7 +85,7 @@ load_pres_bg_data_BirdLife_improper <- function(species,
 
   BL_data[is.na(BL_data$Accuracy..m.) & grepl("500m", BL_data$Survey.Type), "Accuracy..m."] <- 1000
 
-  BL_data[is.na(BL_data$Accuracy..m.) & grepl("5km", BL_data$Survey.Type), "Accuracy..m."] <- 1000
+  BL_data[is.na(BL_data$Accuracy..m.) & grepl("5km", BL_data$Survey.Type), "Accuracy..m."] <- 10000
 
   ## Remove spatial duplicates (other duplicate types may matter, think later)
 
