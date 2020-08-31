@@ -1,5 +1,6 @@
 #' Load presence records from BirdLife
 #'
+#' @param filepath
 #' @param species Character vector of species scientific name
 #' @param region
 #' @param save.map Logical value to indicate saving the map to file or not
@@ -13,7 +14,8 @@
 #'
 
 
-load_pres_bg_data_BirdLife <- function(species,
+load_pres_bg_data_BirdLife <- function(filepath,
+                                       species,
                                        region = "all",
                                        save.map = TRUE,
                                        map.directory = "."){
@@ -50,7 +52,7 @@ load_pres_bg_data_BirdLife <- function(species,
 
   ## Load in BirdLife data from file
 
-  BL_data <- read.csv("bushfireResponse_data/spp_data_raw/BirdLife/BirdLife_data.csv",
+  BL_data <- read.csv(filepath,
                        stringsAsFactors = FALSE)
 
   BL_data <- BL_data[BL_data$Scientific.Name == species, ]
@@ -72,12 +74,20 @@ load_pres_bg_data_BirdLife <- function(species,
                    "Locality" = NA,
                    "Institute" = BL_data$Source,
                    "Collection" = NA,
-                   "Coordinate.Uncertainty.in.Metres" = 1,
+                   "Coordinate.Uncertainty.in.Metres" = BL_data$Accuracy..m.,
                    stringsAsFactors = FALSE)
 
   #####################
   ### Data Cleaning ###
   #####################
+
+  ## BirdLife uncertainty formatting
+
+  BL_data[is.na(BL_data$Accuracy..m.) & grepl("2ha", BL_data$Survey.Type), "Accuracy..m."] <- 80
+
+  BL_data[is.na(BL_data$Accuracy..m.) & grepl("500m", BL_data$Survey.Type), "Accuracy..m."] <- 1000
+
+  BL_data[is.na(BL_data$Accuracy..m.) & grepl("5km", BL_data$Survey.Type), "Accuracy..m."] <- 1000
 
   ## Remove spatial duplicates (other duplicate types may matter, think later)
 
