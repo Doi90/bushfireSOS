@@ -74,12 +74,20 @@ load_pres_bg_data_BirdLife <- function(filepath,
                    "Locality" = NA,
                    "Institute" = BL_data$Source,
                    "Collection" = NA,
-                   "Coordinate.Uncertainty.in.Metres" = 1,
+                   "Coordinate.Uncertainty.in.Metres" = BL_data$Accuracy..m.,
                    stringsAsFactors = FALSE)
 
   #####################
   ### Data Cleaning ###
   #####################
+
+  ## BirdLife uncertainty formatting
+
+  BL_data[is.na(BL_data$Accuracy..m.) & grepl("2ha", BL_data$Survey.Type), "Accuracy..m."] <- 80
+
+  BL_data[is.na(BL_data$Accuracy..m.) & grepl("500m", BL_data$Survey.Type), "Accuracy..m."] <- 1000
+
+  BL_data[is.na(BL_data$Accuracy..m.) & grepl("5km", BL_data$Survey.Type), "Accuracy..m."] <- 1000
 
   ## Remove spatial duplicates (other duplicate types may matter, think later)
 
