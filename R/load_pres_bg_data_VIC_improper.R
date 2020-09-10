@@ -71,7 +71,7 @@ load_pres_bg_data_VIC_improper <- function(file,
                    "Longitude" = VIC_data$LONG_DD94,
                    "Latitude" = VIC_data$LAT_DD94,
                    #add date for duplicate processing
-                   "Date" = lubridate::as_date(VIC_data$SURVEY_STA),
+                   "Date" = lubridate::as_date(lubridate::dmy(VIC_data$SURVEY_STA)),
                    "Basis.of.Record" = VIC_data$SAMPLING_M,
                    "Locality" = VIC_data$SITE_LOCAT,
                    "Institute" = "VIC_DEWLP",
