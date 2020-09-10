@@ -57,7 +57,7 @@ load_pres_bg_data_VIC <- function(file,
 
   ## Filter by species
 
-  VIC_data <- VIC_data[VIC_data$SCI_NAME == species, ]
+  VIC_data <- VIC_data[VIC_data$SCIENTIFIC == species, ]
 
   if(nrow(VIC_data) == 0){
     stop("Not run: no records found")
@@ -67,16 +67,16 @@ load_pres_bg_data_VIC <- function(file,
 
   df <- data.frame("ID" = seq_len(nrow(VIC_data)),
                    "Origin" = "VIC_DEWLP",
-                   "Species" = unique(VIC_data$SCI_NAME),
+                   "Species" = unique(VIC_data$SCIENTIFIC),
                    "Longitude" = VIC_data$LONG_DD94,
                    "Latitude" = VIC_data$LAT_DD94,
                    #add date for duplicate processing
-                   "Date" = lubridate::as_date(VIC_data$STARTDATE),
-                   "Basis.of.Record" = VIC_data$RECORDTYPE,
-                   "Locality" = VIC_data$LOCN_DESC,
+                   "Date" = lubridate::as_date(VIC_data$SURVEY_STA),
+                   "Basis.of.Record" = VIC_data$SAMPLING_M,
+                   "Locality" = VIC_data$SITE_LOCAT,
                    "Institute" = "VIC_DEWLP",
-                   "Collection" = VIC_data$COLLECTOR,
-                   "Coordinate.Uncertainty.in.Metres" = VIC_data$MAX_ACC_KM * 1000,
+                   "Collection" = VIC_data$NA,
+                   "Coordinate.Uncertainty.in.Metres" = VIC_data$SITE_ACCUR,
                    stringsAsFactors = FALSE)
 
   #####################
