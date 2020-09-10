@@ -75,7 +75,7 @@ load_pres_bg_data_VIC <- function(file,
                    "Basis.of.Record" = VIC_data$SAMPLING_M,
                    "Locality" = VIC_data$SITE_LOCAT,
                    "Institute" = "VIC_DEWLP",
-                   "Collection" = VIC_data$NA,
+                   "Collection" = NA,
                    "Coordinate.Uncertainty.in.Metres" = VIC_data$SITE_ACCUR,
                    stringsAsFactors = FALSE)
 
