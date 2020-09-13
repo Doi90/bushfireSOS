@@ -17,6 +17,7 @@ load_pres_bg_data_AUS_improper <- function(species,
                                            region = c("VIC","NSW","QLD"),
                                            dir.NSW,
                                            dir.QLD,
+                                           dir.WA,
                                            file.VIC,
                                            file.SA,
                                            file.BirdLife,
@@ -180,29 +181,30 @@ load_pres_bg_data_AUS_improper <- function(species,
 
   }
 
-  # if("WA" %in% region){
-  #
-  #   df_tmp <- tryCatch(expr = load_pres_bg_data_WA(species = species,
-  #                                                  save.map = TRUE,
-  #                                                  map.directory = map.directory),
-  #                      error = function(err){data.frame("ID" = numeric(),
-  #                                                       "Origin" = character(),
-  #                                                       "Species" = character(),
-  #                                                       "Longitude" = numeric(),
-  #                                                       "Latitude" = numeric(),
-  #                                                       #add date for duplicate processing
-  #                                                       "Date" = numeric(),
-  #                                                       "Basis.of.Record" = character(),
-  #                                                       "Locality" = character(),
-  #                                                       "Institute" = character(),
-  #                                                       "Collection" = character(),
-  #                                                       "Coordinate.Uncertainty.in.Metres" = numeric(),
-  #                                                       stringsAsFactors = FALSE)})
-  #
-  #   df <- rbind(df,
-  #               df_tmp$processed.data)
-  #
-  # }
+  if("WA" %in% region){
+
+    df_tmp <- tryCatch(expr = load_pres_bg_data_WA_improper(species = species,
+                                                            dir_path = dir.WA,
+                                                            save.map = TRUE,
+                                                            map.directory = map.directory),
+                       error = function(err){data.frame("ID" = numeric(),
+                                                        "Origin" = character(),
+                                                        "Species" = character(),
+                                                        "Longitude" = numeric(),
+                                                        "Latitude" = numeric(),
+                                                        #add date for duplicate processing
+                                                        "Date" = numeric(),
+                                                        "Basis.of.Record" = character(),
+                                                        "Locality" = character(),
+                                                        "Institute" = character(),
+                                                        "Collection" = character(),
+                                                        "Coordinate.Uncertainty.in.Metres" = numeric(),
+                                                        stringsAsFactors = FALSE)})
+
+    df <- rbind(df,
+                df_tmp$processed.data)
+
+  }
 
   ## Get national data
 
