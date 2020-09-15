@@ -49,16 +49,16 @@ load_pres_bg_data_NSW <- function(dir_path,
   ### Load Data ###
   #################
 
-  NSW_data <- read.table(sprintf("%s/NSW_%s.txt",
-                                 dir_path,
-                                 gsub(" ",
-                                      "_",
-                                      tolower(species))),
-                         stringsAsFactors = FALSE,
-                         sep = "\t",
-                         skip = 4,
-                         header = TRUE,
-                         fill = TRUE)
+  NSW_data <- data.table::fread(sprintf("%s/NSW_%s.txt",
+                                        dir_path,
+                                        gsub(" ",
+                                             "_",
+                                             tolower(species))),
+                                stringsAsFactors = FALSE,
+                                sep = "\t",
+                                skip = 4,
+                                header = TRUE,
+                                fill = TRUE)
 
   if(nrow(NSW_data) == 0){
     stop("Not run: no records found")
