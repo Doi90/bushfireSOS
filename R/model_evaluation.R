@@ -15,13 +15,14 @@
 cross_validate <- function(spp_data,
                            type = c("po", "pa"),
                            k = 5,
-                           features = c("default", "lqp", "lqh", "lq", "l"),
+                           # features = c("default", "lqp", "lqh", "lq", "l"),
+                           filepath,
                            parallel = FALSE,
                            parallel_tuning = FALSE,
                            ncors = 4,
                            tuneParam_CV = TRUE){
 
-  features <- match.arg(features)
+  # features <- match.arg(features)
 
   df <- spp_data$data
 
@@ -53,8 +54,8 @@ cross_validate <- function(spp_data,
                            .export = c("fit_pres_bg_model",
                                        "regularisedMaxent",
                                        "fit_pres_abs_model"),
-                           .packages = c('maxnet',
-                                         'precrec',
+                           .packages = c('precrec',
+                                         # 'maxnet',
                                          'ecospat',
                                          'dismo')) %dopar% {
 
@@ -66,24 +67,27 @@ cross_validate <- function(spp_data,
 
                                              ## Fit a maxent
 
-                                             mxnt <- fit_pres_bg_model(df[trainSet, ],
+                                             mxnt <- fit_pres_bg_model(spp_data = list(data = df[trainSet, ]),
                                                                        tuneParam = tuneParam_CV,
-                                                                       features = features,
+                                                                       filepath = filepath,
+                                                                       k = k,
+                                                                       # features = features,
                                                                        parallel = FALSE) # parallel must be FALSE here
 
                                              prediction <- as.vector(predict(mxnt,
                                                                              df[testSet, 14:ncol(df)],
-                                                                             type = "cloglog"))
+                                                                             args = "outputformat=cloglog"))
 
                                            } else {
 
                                              ## fit a brt
 
-                                             brt <- fit_pres_abs_model(df[trainSet, ])
+                                             brt <- fit_pres_abs_model(spp_data = list(data = df[trainSet, ]))
 
                                              prediction <- predict(brt,
                                                                    df[testSet , 14:ncol(df)],
-                                                                   n.trees = brt$gbm.call$best.trees, type = "response")
+                                                                   n.trees = brt$gbm.call$best.trees,
+                                                                   type = "response")
 
                                            }
 
@@ -141,15 +145,21 @@ cross_validate <- function(spp_data,
 
         ## fit a maxent
 
-        mxnt <- fit_pres_bg_model(list(data = df[trainSet, ]),
+        # mxnt <- fit_pres_bg_model(list(data = df[trainSet, ]),
+        #                           tuneParam = tuneParam_CV,
+        #                           parallel = parallel_tuning,
+        #                           ncors = ncors,
+        #                           features = features)
+        mxnt <- fit_pres_bg_model(spp_data = list(data = df[trainSet, ]),
                                   tuneParam = tuneParam_CV,
-                                  parallel = parallel_tuning,
-                                  ncors = ncors,
-                                  features = features)
+                                  filepath = filepath,
+                                  k = k,
+                                  # features = features,
+                                  parallel = FALSE) # parallel must be FALSE here
 
         prediction <- as.vector(predict(mxnt,
                                         df[testSet, 14:ncol(df)],
-                                        type = "cloglog"))
+                                        args = "outputformat=cloglog"))
 
       } else {
 

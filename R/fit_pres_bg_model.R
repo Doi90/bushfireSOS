@@ -12,11 +12,12 @@
 fit_pres_bg_model <- function(spp_data,
                               tuneParam = TRUE,
                               k = 5,
-                              features = c("default", "lqp", "lqh", "lq", "l"),
+                              filepath,
+                              # features = c("default", "lqp", "lqh", "lq", "l"),
                               parallel = TRUE,
                               ncors = 4){
 
-  features <- match.arg(features)
+  # features <- match.arg(features)
   ncors <- min(ncors, parallel::detectCores() - 1)
 
   df <- spp_data$data
@@ -31,26 +32,28 @@ fit_pres_bg_model <- function(spp_data,
 
     val <- which(names(df) == "Value")
 
-    bestRegMult <- regularisedMaxent(data = df[ , c(val, 14:ncol(df))],
+    best_params <- regularisedMaxent(data = df[ , c(val, 14:ncol(df))],
                                      kf = k,
+                                     filepath = filepath,
                                      parallel = parallel,
-                                     features = features,
                                      ncors = ncors)
 
   } else {
 
-    bestRegMult <- 1
+    best_params <- c("betamultiplier=1", "nothreshold")
 
   }
 
   ## Fit MaxEnt model
 
-  best_mod <- maxnet::maxnet(p = df$Value,
-                             data = df[ , 14:ncol(df)],
-                             regmult = bestRegMult,
-                             maxnet::maxnet.formula(p = df$Value,
-                                                    data = df[ , 14:ncol(df)],
-                                                    classes = features))
+  presences <- df$Value
+  covariates <- df[, 14:ncol(df)]
+
+  maxmod <- dismo::maxent(x = covariates,
+                          p = presences,
+                          removeDuplicates = FALSE,
+                          path = filepath,
+                          args = c(best_params, "-J", "-P"))
 
   return(best_mod)
 

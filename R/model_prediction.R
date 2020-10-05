@@ -18,8 +18,7 @@ model_prediction <- function(model,
                              parallel = TRUE,
                              ncors = 4){
 
-  ncors <- min(ncors,
-               parallel::detectCores() - 1)
+  ncors <- min(ncors, parallel::detectCores() - 1)
 
   # ## Mask
   #
@@ -32,27 +31,42 @@ model_prediction <- function(model,
 
   modtype <- class(model)[1]
 
-  outtype <- ifelse(modtype == "maxnet",
-                    "cloglog",
-                    "response")
+  # outtype <- ifelse(modtype == "maxnet",
+  #                   "cloglog",
+  #                   "response")
 
   if(parallel){
 
     raster::beginCluster(n = ncors,
                          type = "SOCK")
 
-    preds <- raster::clusterR(env_data,
-                              raster::predict,
-                              args = list(model = model,
-                                          type = outtype))
+    if(modtype == "MaxEnt"){
+      preds <- raster::clusterR(env_data,
+                                raster::predict,
+                                args = list(model = model,
+                                            args = "outputformat=cloglog"))
+    } else{
+      preds <- raster::clusterR(env_data,
+                                raster::predict,
+                                args = list(model = model,
+                                            n.trees = model$gbm.call$best.trees,
+                                            type = "response"))
+    }
 
     raster::endCluster()
 
   } else {
 
-    preds <- raster::predict(env_data,
-                             model,
-                             type = outtype)
+    if(modtype == "MaxEnt"){
+      preds <- raster::predict(env_data,
+                               model,
+                               args = "outputformat=cloglog")
+    } else{
+      preds <- raster::predict(env_data,
+                               model,
+                               n.trees = model$gbm.call$best.trees,
+                               type = "response")
+    }
 
   }
 

@@ -9,15 +9,18 @@
 #' @examples
 
 regularisedMaxent <- function(data,
-                              kf = 4,
-                              features = c("default", "lqp", "lqh", "lq", "l"),
+                              kf = 5,
+                              # features = c("default", "lqp", "lqh", "lq", "l"),
+                              filepath,
                               parallel = TRUE,
-                              ncors = 4){
+                              ncors = 5){
+  require(dismo)
+  require(caret)
+  require(precrec)
 
-  features <- match.arg(features)
+  # features <- match.arg(features)
   ncors <- min(ncors, parallel::detectCores() - 1)
 
-  ms <- c(0.25, 0.5, 1, 2, 3, 4)
 
   folds <- caret::createFolds(y = as.factor(data$Value), k = kf)
 
@@ -33,7 +36,18 @@ regularisedMaxent <- function(data,
                sum(data$Value),
                kf)
 
-  for(m in ms){
+  # create the paramter grid for tuning
+  ms <- c(0.5, 1, 2, 3, 4)
+  grid <- expand.grid(regmult = paste0("betamultiplier=", ms),
+                      features = list(c("noautofeature", "linear=true", "quadratic=true", "hinge=true", "product=true", "threshold=false"), # LQHP
+                                      c("noautofeature", "linear=true", "quadratic=true", "hinge=true", "product=false", "threshold=false"), # LQH
+                                      c("noautofeature", "linear=true", "quadratic=true", "hinge=false", "product=true", "threshold=false"), # LQP
+                                      c("noautofeature", "linear=true", "quadratic=true", "hinge=false", "product=false", "threshold=false"), # LQ
+                                      c("noautofeature", "linear=false", "quadratic=false", "hinge=true", "product=false", "threshold=false"), # H
+                                      c("noautofeature", "linear=true", "quadratic=false", "hinge=false", "product=false", "threshold=false")), # L
+                      stringsAsFactors = FALSE)
+
+  for(n in seq_along(grid[, 1])){
 
     n <- n + 1
 
@@ -50,22 +64,33 @@ regularisedMaxent <- function(data,
       doSNOW::registerDoSNOW(cluster)
 
       modAUC <- foreach::foreach(k = seq_len(kf),
-                                 .packages = c('maxnet', 'precrec')) %dopar% {
+                                 .packages = c('dismo', 'precrec')) %dopar% {
 
                                    trainSet <- unlist(folds[-k])
 
                                    testSet <- unlist(folds[k])
 
-                                   mxnet <- maxnet::maxnet(p = presences[trainSet],
-                                                           data = covariates[trainSet, ],
-                                                           regmult = m, # regularisation multiplier
-                                                           maxnet::maxnet.formula(p = presences[trainSet],
-                                                                                  data = covariates[trainSet, ],
-                                                                                  classes = features))
+                                   # mxnet <- maxnet::maxnet(p = presences[trainSet],
+                                   #                         data = covariates[trainSet, ],
+                                   #                         regmult = m, # regularisation multiplier
+                                   #                         maxnet::maxnet.formula(p = presences[trainSet],
+                                   #                                                data = covariates[trainSet, ],
+                                   #                                                classes = features))
 
-                                   prediction <- as.vector(predict(mxnet,
+                                   if(inherits(try(
+                                     maxmod <- dismo::maxent(x = covariates[trainSet, ],
+                                                             p = presences[trainSet],
+                                                             removeDuplicates = FALSE,
+                                                             path = filepath,
+                                                             args = as.character(unlist(grid[n, ]))
+                                     )
+                                   ), "try-error")){
+                                     next
+                                   }
+
+                                   prediction <- as.vector(predict(maxmod,
                                                                    covariates[testSet, ],
-                                                                   type = "cloglog"))
+                                                                   args = "outputformat=cloglog"))
 
                                    modAUC <- precrec::auc(precrec::evalmod(scores = prediction,
                                                                            labels = presences[testSet]))[1, 4]
@@ -84,17 +109,27 @@ regularisedMaxent <- function(data,
 
         testSet <- unlist(folds[k])
 
-        mxnet <- maxnet::maxnet(p = presences[trainSet],
-                                data = covariates[trainSet, ],
-                                regmult = m, # regularisation multiplier
-                                maxnet::maxnet.formula(p = presences[trainSet],
-                                                       data = covariates[trainSet, ],
-                                                       classes = features))
+        # mxnet <- maxnet::maxnet(p = presences[trainSet],
+        #                         data = covariates[trainSet, ],
+        #                         regmult = m, # regularisation multiplier
+        #                         maxnet::maxnet.formula(p = presences[trainSet],
+        #                                                data = covariates[trainSet, ],
+        #                                                classes = features))
 
+        if(inherits(try(
+          maxmod <- dismo::maxent(x = covariates[trainSet, ],
+                                  p = presences[trainSet],
+                                  removeDuplicates = FALSE,
+                                  path = filepath,
+                                  args = as.character(unlist(grid[n, ]))
+          )
+        ), "try-error")){
+          next
+        }
 
-        prediction <- as.vector(predict(mxnet,
+        prediction <- as.vector(predict(maxmod,
                                         covariates[testSet, ],
-                                        type = "cloglog"))
+                                        args = "outputformat=cloglog"))
 
         modAUC[k] <- precrec::auc(precrec::evalmod(scores = prediction,
                                                    labels = presences[testSet]))[1, 4]
@@ -106,8 +141,8 @@ regularisedMaxent <- function(data,
 
   }
 
-  bestModel <- ms[which.max(AUCs)]
+  best_param <- as.character(unlist(grid[which.max(AUCs), ]))
 
-  return(bestModel)
+  return(best_param)
 
 }
