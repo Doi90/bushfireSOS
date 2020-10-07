@@ -3,6 +3,7 @@
 #' @param spp_data
 #' @param tuneParam Logical. Whether to tune the regularisation multiplier
 #' @param k Integer. If tuneParam = TRUE, specify the number cross-validation folds
+#' @param filepath The path to Maxent files. Note that the path should be complete (i.e. it does not accept path like this: "~/Desktop/output")
 #'
 #' @return
 #' @export
@@ -12,13 +13,13 @@
 fit_pres_bg_model <- function(spp_data,
                               tuneParam = TRUE,
                               k = 5,
-                              filepath,
                               # features = c("default", "lqp", "lqh", "lq", "l"),
-                              parallel = TRUE,
-                              ncors = 4){
+                              # parallel = TRUE,
+                              # ncors = 4,
+                              filepath){
 
   # features <- match.arg(features)
-  ncors <- min(ncors, parallel::detectCores() - 1)
+  # ncors <- min(ncors, parallel::detectCores() - 1)
 
   df <- spp_data$data
 
@@ -34,9 +35,9 @@ fit_pres_bg_model <- function(spp_data,
 
     best_params <- regularisedMaxent(data = df[ , c(val, 14:ncol(df))],
                                      kf = k,
-                                     filepath = filepath,
-                                     parallel = parallel,
-                                     ncors = ncors)
+                                     # parallel = parallel,
+                                     # ncors = ncors,
+                                     filepath = filepath)
 
   } else {
 
@@ -55,7 +56,7 @@ fit_pres_bg_model <- function(spp_data,
                           path = filepath,
                           args = c(best_params, "-J", "-P"))
 
-  return(best_mod)
+  return(maxmod)
 
 }
 
