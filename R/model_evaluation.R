@@ -23,6 +23,8 @@ cross_validate <- function(spp_data,
                            # ncors = 4,
                            tuneParam_CV = TRUE){
 
+  library(dismo)
+
   # features <- match.arg(features)
 
   df <- spp_data$data
