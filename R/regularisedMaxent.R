@@ -15,8 +15,8 @@ regularisedMaxent <- function(data,
                               # ncors = 4,
                               filepath){
   require(dismo)
-  require(caret)
   require(precrec)
+  # require(caret)
 
   # features <- match.arg(features)
   # ncors <- min(ncors, parallel::detectCores() - 1)
