@@ -19,6 +19,7 @@ load_pres_bg_data_AUS_improper <- function(species,
                                            dir.QLD,
                                            dir.WA = "bushfireResponse_data/spp_data_raw",
                                            dir.SA,
+                                           dir.VIC,
                                            file.VIC,
                                            file.SA,
                                            file.BirdLife,
@@ -59,6 +60,35 @@ load_pres_bg_data_AUS_improper <- function(species,
                                                              species = species,
                                                              save.map = FALSE,
                                                              map.directory = map.directory),
+                       error = function(err){
+                         return(list(processed.data = data.frame("ID" = numeric(),
+                                                                 "Origin" = character(),
+                                                                 "Species" = character(),
+                                                                 "Longitude" = numeric(),
+                                                                 "Latitude" = numeric(),
+                                                                 #add date for duplicate processing
+                                                                 "Date" = lubridate::as_date(numeric()),
+                                                                 "Basis.of.Record" = character(),
+                                                                 "Locality" = character(),
+                                                                 "Institute" = character(),
+                                                                 "Collection" = character(),
+                                                                 "Coordinate.Uncertainty.in.Metres" = numeric(),
+                                                                 stringsAsFactors = FALSE)))
+                       })
+
+    df <- rbind(df,
+                df_tmp$processed.data)
+
+    if(is.list(df_tmp)){
+
+      raw_data$VIC <- df_tmp$raw.VIC.data
+
+    }
+
+    df_tmp <- tryCatch(expr = load_pres_bg_data_VIC_2(dir_path = dir.VIC,
+                                                      species = species,
+                                                      save.map = FALSE,
+                                                      map.directory = map.directory),
                        error = function(err){
                          return(list(processed.data = data.frame("ID" = numeric(),
                                                                  "Origin" = character(),
