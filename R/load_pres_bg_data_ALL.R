@@ -26,7 +26,8 @@ load_pres_bg_data_AUS <- function(species,
                                   email,
                                   save.map,
                                   map.directory,
-                                  date.cutoff = "1970-01-01"){
+                                  date.cutoff = "1970-01-01",
+                                  uncertainty.cutoff = 1000){
 
   ########################
   ### Get Species Data ###
@@ -363,7 +364,7 @@ load_pres_bg_data_AUS <- function(species,
 
   df$Coordinate.Uncertainty.in.Metres <- as.numeric(df$Coordinate.Uncertainty.in.Metres)
 
-  df <- df[df$Coordinate.Uncertainty.in.Metres <= 1000 & !is.na(df$Coordinate.Uncertainty.in.Metres), ]
+  df <- df[df$Coordinate.Uncertainty.in.Metres <= uncertainty.cutoff & !is.na(df$Coordinate.Uncertainty.in.Metres), ]
 
   ## Remove weird NAs
 
