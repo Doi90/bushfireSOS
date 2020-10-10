@@ -56,6 +56,10 @@ background_points <- function(species,
     all_background <- background_vertebrates
   }
 
+  if(background_group == "vertebrates_1990"){
+    all_background <- background_vertebrates_1990
+  }
+
   ## Filter background points
 
   filter_bg <- all_background[all_background$Guild == guild, ]
