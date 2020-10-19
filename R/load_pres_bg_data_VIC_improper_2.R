@@ -185,7 +185,7 @@ load_pres_bg_data_VIC_improper_2 <- function(dir_path,
   # }
 
   return(list(processed.data = df,
-              raw.QLD.data = QLD_data,
+              raw.VIC.data = VIC_data,
               rounding.comment = suspect.rounding))
 
 }

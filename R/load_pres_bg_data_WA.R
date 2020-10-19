@@ -188,7 +188,7 @@ load_pres_bg_data_WA <- function(dir_path,
   # }
 
   return(list(processed.data = df,
-              raw.QLD.data = QLD_data,
+              raw.WA.data = WA_data,
               rounding.comment = suspect.rounding))
 
 }
