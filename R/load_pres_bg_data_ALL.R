@@ -152,7 +152,7 @@ load_pres_bg_data_AUS <- function(species,
 
   if("QLD" %in% region){
 
-    df_tmp <- tryCatch(expr = load_pres_bg_data_QLD(dir_path, dir.QLD,
+    df_tmp <- tryCatch(expr = load_pres_bg_data_QLD(dir_path = dir.QLD,
                                                     species = species,
                                                     save.map = FALSE,
                                                     map.directory = map.directory),
