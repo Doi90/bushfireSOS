@@ -264,6 +264,13 @@ load_pres_bg_data_AUS <- function(species,
     df <- rbind(df,
                 df_tmp$processed.data)
 
+    if(is.list(df_tmp)){
+
+      raw_data$WA <- df_tmp$raw.WA.data
+
+    }
+
+
   }
 
   ## Get national data
