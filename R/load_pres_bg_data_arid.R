@@ -55,7 +55,7 @@ load_pres_bg_data_arid <- function(filepath,
   Arid_data <- read.csv(filepath,
                         stringsAsFactors = FALSE)
 
-  Arid_data <- Arid_data[Arid_data$species == species, ]
+  Arid_data <- Arid_data[Arid_data$SDM_group == species, ]
 
   if(nrow(Arid_data) == 0){
     stop("Not run: no records found")
@@ -69,7 +69,7 @@ load_pres_bg_data_arid <- function(filepath,
                    "Longitude" = Arid_data$Longitude,
                    "Latitude" = Arid_data$Latitude,
                    #add date for duplicate processing
-                   "Date" = lubridate::as_date(Arid_data$Survey.event.date),
+                   "Date" = lubridate::as_date(Arid_data$Date),
                    "Basis.of.Record" = Arid_data$Survey.method,
                    "Locality" = NA,
                    "Institute" = NA,
