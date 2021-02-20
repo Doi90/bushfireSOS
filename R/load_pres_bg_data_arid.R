@@ -182,7 +182,7 @@ load_pres_bg_data_arid <- function(filepath,
   #
   # }
 
-  return(list(processed.data = df,
+  return(list(data = df,
               raw.arid.data = Arid_data,
               rounding.comment = suspect.rounding))
 
