@@ -37,35 +37,48 @@ background_points_arid <- function(species,
                                    n_samples,
                                    dismo_sampling = FALSE){
 
-    ## Generate background points
+  ## Generate background points
 
-    if(dismo_sampling){
-      bg_dismo <- dismo::randomPoints(bias_layer,
-                                      n_samples,
-                                      prob = TRUE)
-    } else{
-      bg_dismo <- fastRandomPoints(bias_layer,
-                                   size = n_samples)
-    }
+  if(dismo_sampling){
+    bg_dismo <- dismo::randomPoints(bias_layer,
+                                    n_samples,
+                                    prob = TRUE)
+  } else{
+    bg_dismo <- fastRandomPoints(bias_layer,
+                                 size = n_samples)
+  }
 
 
-    bg <- data.frame(ID = NA,
-                     Origin = NA,
-                     Species = NA,
-                     Longitude = bg_dismo[ , 1],
-                     Latitude = bg_dismo[ , 2],
-                     Date = NA,
-                     Basis.of.Record = NA,
-                     Locality = NA,
-                     Institute = NA,
-                     Collection = NA,
-                     Coordinate.Uncertainty.in.Metres =NA,
-                     Guild = NA,
-                     Value = 0,
-                     stringsAsFactors = FALSE)
+  bg <- data.frame(ID = NA,
+                   Origin = NA,
+                   Species = NA,
+                   Longitude = bg_dismo[ , 1],
+                   Latitude = bg_dismo[ , 2],
+                   Date = NA,
+                   Basis.of.Record = NA,
+                   Locality = NA,
+                   Institute = NA,
+                   Collection = NA,
+                   Coordinate.Uncertainty.in.Metres =NA,
+                   Guild = NA,
+                   Value = 0,
+                   stringsAsFactors = FALSE)
 
-    type <- "random background"
+  type <- "random background"
 
+  ## Convert spdata to a sf object
+
+  spdata.sf <- sf::st_as_sf(spp_data$data,
+                            coords = c("Longitude", "Latitude"),
+                            crs = 4326)
+
+  #reproject to Australian Albers
+  spdata.sf <- sf::st_transform(spdata.sf,
+                                crs = 3577)
+
+  #override original long/lat coordinates
+  #note that this makes column names incorrect
+  spp_data$data[ ,c("Longitude", "Latitude")] <- sf::st_coordinates(spdata.sf)
   ## Filter presence points by pixel
 
   spp_data$data <- pixel_filtering(data = spp_data$data,
