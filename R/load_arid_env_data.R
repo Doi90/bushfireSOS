@@ -10,7 +10,7 @@
 
 load_arid_env_data <- function(file){
 
-  ras <- raster::raster(file)
+  ras <- raster::stack(file)
 
   return(ras)
 
