@@ -16,6 +16,7 @@
 
 load_pres_bg_data_arid <- function(filepath,
                                    species,
+                                   species_col,
                                    region = "all",
                                    save.map = TRUE,
                                    map.directory = "."){
@@ -55,7 +56,10 @@ load_pres_bg_data_arid <- function(filepath,
   Arid_data <- read.csv(filepath,
                         stringsAsFactors = FALSE)
 
-  Arid_data <- Arid_data[Arid_data$SDM_group == species, ]
+  command <- sprintf("Arid_data[Arid_data$%s == species, ]",
+                     species_col)
+
+  Arid_data <- eval(parse(text = command))
 
   if(nrow(Arid_data) == 0){
     stop("Not run: no records found")
