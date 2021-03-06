@@ -40,11 +40,11 @@ background_points_arid <- function(species,
     ## Generate background points
 
     if(dismo_sampling){
-      bg_dismo <- dismo::randomPoints(bias_inv,
+      bg_dismo <- dismo::randomPoints(bias_layer,
                                       n_samples,
                                       prob = TRUE)
     } else{
-      bg_dismo <- fastRandomPoints(bias_inv,
+      bg_dismo <- fastRandomPoints(bias_layer,
                                    size = n_samples)
     }
 
