@@ -51,7 +51,7 @@ load_pres_inverts <- function(file,
   data <- read.csv(file,
                    stringsAsFactors = FALSE)
 
-  data <- data[data$scientificNameString == species, ]
+  data <- data[data$scientificName == species, ]
 
   if(nrow(data) == 0){
     stop("Not run: no records found")
