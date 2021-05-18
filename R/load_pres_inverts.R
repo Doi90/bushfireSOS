@@ -65,7 +65,7 @@ load_pres_inverts <- function(file,
                    "Longitude" = data$longitude,
                    "Latitude" = data$latitude,
                    #add date for duplicate processing
-                   "Date" = lubridate::as_date(data$year,
+                   "Date" = lubridate::as_date(as.character(data$year),
                                                format = "%Y"),
                    "Basis.of.Record" = NA,
                    "Locality" = NA,
