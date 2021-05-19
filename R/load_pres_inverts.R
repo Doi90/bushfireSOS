@@ -193,7 +193,7 @@ load_pres_inverts <- function(file,
   #
   # }
 
-  return(list(processed.data = df,
+  return(list(data = df,
               raw.data = data,
               rounding.comment = suspect.rounding))
 
